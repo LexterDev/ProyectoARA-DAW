@@ -22,7 +22,7 @@ export const routes: Routes = [
     { path: 'categories', component: CategoriesComponent },
     { path: 'licenses', component: LicensesComponent },
     { path: 'resources', component: ResourceComponent },
-    {path: 'dashboard', component: DashboardStudentsComponent},
+    {path: 'dashboard-student', component: DashboardStudentsComponent},
     { path: '', component: LandingComponent },
     { path: 'register', component: RegisterComponent },
     {path: 'perfil', component: PerfilComponent},
