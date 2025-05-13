@@ -16,10 +16,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { ProfileMenuComponent } from './components/profile-menu/profile-menu.component';
 import { AuthService } from './services/auth.service';
-
+import { UserAvatarComponent } from './components/user-avatar/user-avatar.component'; // ✅ AÑADIR
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [
     RouterOutlet,
     MainMenuComponent,
@@ -39,6 +40,7 @@ import { AuthService } from './services/auth.service';
   ],
   animations: [
     routeTransitionAnimations
+    UserAvatarComponent // ✅ IMPORTAR PARA QUE FUNCIONE EN app.component.html
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -50,6 +52,7 @@ export class AppComponent implements OnInit {
 
 
   constructor(private http: HttpClient, private router: Router, public route: ActivatedRoute, private authService: AuthService) {}
+
 
   toggleMenu() {
     this.isSidenavOpen = !this.isSidenavOpen;
@@ -63,8 +66,7 @@ export class AppComponent implements OnInit {
       }
     });
   }
-  
-  // Funcion para guar usuario en localstorage
+
   saveUser(user: any) {
     localStorage.setItem('user', JSON.stringify(user));
   }
@@ -79,5 +81,5 @@ export class AppComponent implements OnInit {
     this.router.navigate(['/register']);
   }
 
-
 }
+
