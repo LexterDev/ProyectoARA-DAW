@@ -8,10 +8,11 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIcon } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-
+import { UserAvatarComponent } from './components/user-avatar/user-avatar.component'; // ✅ AÑADIR
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [
     RouterOutlet,
     MainMenuComponent,
@@ -21,7 +22,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatIcon,
     MatButtonModule,
     RouterLink,
-    RouterLinkActive
+    RouterLinkActive,
+    UserAvatarComponent // ✅ IMPORTAR PARA QUE FUNCIONE EN app.component.html
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -29,7 +31,6 @@ import { MatButtonModule } from '@angular/material/button';
 export class AppComponent implements OnInit {
   title = 'frontproyectodaw';
   isSidenavOpen = true;
-
 
   constructor(private http: HttpClient) {}
 
@@ -40,11 +41,9 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.saveUser('1');
   }
-  
-  // Funcion para guar usuario en localstorage
+
   saveUser(user: any) {
     localStorage.setItem('user', JSON.stringify(user));
   }
-
-
 }
+

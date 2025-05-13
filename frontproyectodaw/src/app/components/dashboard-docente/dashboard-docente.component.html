@@ -1,1 +1,40 @@
-<p>dashboard-docente works!</p>
+<mat-tab-group>
+  <mat-tab label="Perfil">
+    <div style="text-align: center; margin-top: 20px;">
+      <h2>Bienvenido,</h2>
+    </div>
+
+    <div style="display: flex; justify-content: center; gap: 20px; margin-top: 30px;">
+      <mat-card style="width: 300px;">
+        <mat-card-title>Información Personal</mat-card-title>
+        <mat-card-content>
+          <p><strong>Nombre de usuario:</strong></p>
+          <p><strong>Correo electrónico:</strong></p>
+          <p><strong>Rol de usuario:</strong></p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary">Editar perfil</button>
+        </mat-card-actions>
+      </mat-card>
+
+      <mat-card style="width: 300px;">
+        <mat-card-title>Actividades de Accesos</mat-card-title>
+        <mat-card-content>
+          <p><strong>Último acceso al sitio:</strong></p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-tab>
+
+  <mat-tab label="Configuración">
+    <div style="text-align: center; margin-top: 20px;">
+      <p>Sección de configuración del docente.</p>
+    </div>
+  </mat-tab>
+
+  <mat-tab label="Información">
+    <div style="text-align: center; margin-top: 20px;">
+      <p>Sección de información adicional.</p>
+    </div>
+  </mat-tab>
+</mat-tab-group>

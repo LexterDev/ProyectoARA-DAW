@@ -1,0 +1,22 @@
+<h2>Subir Nuevo Recurso</h2>
+
+<form>
+  <mat-form-field appearance="fill" class="form-field">
+    <mat-label>Título del recurso</mat-label>
+    <input matInput required>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="form-field">
+    <mat-label>Tipo</mat-label>
+    <mat-select required>
+      <mat-option value="PDF">PDF</mat-option>
+      <mat-option value="Video">Video</mat-option>
+      <mat-option value="Código">Código</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <input type="file" (change)="seleccionarArchivo($event)">
+  <br><br>
+
+  <button mat-raised-button color="primary" (click)="subir()">Subir</button>
+</form>
