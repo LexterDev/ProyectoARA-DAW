@@ -15,6 +15,7 @@ import { PerfilEditComponent } from './pages/perfil-edit/perfil-edit.component';
 import { TermsConditionsComponent } from './pages/terms-conditions/terms-conditions.component';
 import { PrivacyPoliciesComponent } from './pages/privacy-policies/privacy-policies.component';
 import { GeneralDescriptionComponent } from './pages/general-description/general-description.component';
+import { FavoritesComponent } from './components/favorites/favorites.component';   
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
@@ -32,5 +33,7 @@ export const routes: Routes = [
     {path: 'perfil-edit', component: PerfilEditComponent},
     {path: 'terms-conditions', component: TermsConditionsComponent},
     {path: 'privacy-polices', component: PrivacyPoliciesComponent},
-    {path: 'general-description', component: GeneralDescriptionComponent}
+    {path: 'general-description', component: GeneralDescriptionComponent},
+    {path: 'favorites', component: FavoritesComponent},
+    
 ];

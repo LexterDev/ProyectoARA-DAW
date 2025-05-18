@@ -51,6 +51,7 @@
         </p>
       </mat-card-content>
     </mat-card>
+
   </div>
 
   <!-- Ultimos recursos publicados -->
@@ -81,4 +82,46 @@
 
     </mat-card-content>
   </mat-card>
+
+      <!-- Recursos Favoritos -->
+    <mat-card class="!bg-[#ffffff] mb-6 p-6 !shadow-lg" appearance="outlined">
+      <mat-card-title class="!mb-4 text-xl"
+        >Recursos Favoritos</mat-card-title
+      >
+      <mat-card-content class="space-y-3 text-base text-gray-800">
+        <p>
+          <strong>Último recurso favorito:</strong>
+          {{ userInformation.ultimo_recurso_favorito }}
+        </p>
+        <div
+          *ngIf="
+            userInformation.recursos_favoritos &&
+            userInformation.recursos_favoritos.length > 0;
+            else noFavoriteResources
+          "
+        >
+          <div
+            *ngFor="let recurso of userInformation.recursos_favoritos"
+            class="flex items-center"
+          >
+            <mat-icon class="mr-2">favorite</mat-icon>
+            <span>{{ recurso.nombre }}</span>
+          </div>
+        </div>
+        <ng-template #noFavoriteResources>
+          <p>No tienes recursos favoritos todavía.</p>
+        </ng-template>
+        <div class="flex justify-start items-center mt-6 px-2">
+          <button
+            mat-raised-button
+            class="!bg-[#ad1d7d] flex items-center gap-2 py-2 px-4 !text-lg hover:!bg-[#505050] shadow-md !text-white !rounded-md cursor-pointer"
+            routerLink="/favorites"
+            (click)="redirectTo('favorites')"
+          >
+            <mat-icon>favorite</mat-icon>Ver favoritos
+          </button>
+        </div>
+      </mat-card-content>
+      </mat-card>
+      
 </div>
