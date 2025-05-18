@@ -1,40 +1,84 @@
 <div class="bg-white p-6 w-full rounded-md shadow-md">
-
   <!-- Avatar y bienvenida -->
   <mat-card class="!bg-[#ffffff] mb-6 p-15 !shadow-lg" appearance="outlined">
-    <img [src]="userInformation.avatar" class="w-70 h-70 rounded-full mb-4 mx-auto" alt="Avatar" />
-    <mat-card-title class="text-center !font-bold !text-3xl">Bienvenido, {{userInformation.userName}}</mat-card-title>
+    <img
+      [src]="userInformation.avatar"
+      class="w-70 h-70 rounded-full mb-4 mx-auto"
+      alt="Avatar"
+    />
+    <mat-card-title class="text-center !font-bold !text-3xl"
+      >Bienvenido, {{ userInformation.userName }}</mat-card-title
+    >
   </mat-card>
 
   <!-- Grid de secciones -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
     <!-- Información Personal -->
     <mat-card class="!bg-[#ffffff] mb-6 p-6 !shadow-lg" appearance="outlined">
-      <mat-card-title class="!mb-4 text-xl">Información Personal</mat-card-title>
-  
+      <mat-card-title class="!mb-4 text-xl"
+        >Información Personal</mat-card-title
+      >
+
       <mat-card-content class="space-y-3 text-base text-gray-800">
-        <p><strong>Nombre de usuario:</strong> {{ userInformation.userName }}</p>
+        <p>
+          <strong>Nombre de usuario:</strong> {{ userInformation.userName }}
+        </p>
         <p><strong>Correo electrónico:</strong> {{ userInformation.email }}</p>
         <p><strong>Rol de usuario:</strong> {{ userInformation.rol }}</p>
       </mat-card-content>
-      
+
       <div class="flex justify-start items-center mt-6 px-2">
-        <button mat-raised-button
-                class="!bg-[#ad1d7d] flex items-center gap-2 py-2 px-4 !text-lg hover:!bg-[#505050] shadow-md !text-white !rounded-md cursor-pointer"
-                routerLink="/perfil-edit"
-                (click)="redirectTo('perfil-edit')"><mat-icon>edit</mat-icon>Editar perfil
+        <button
+          mat-raised-button
+          class="!bg-[#ad1d7d] flex items-center gap-2 py-2 px-4 !text-lg hover:!bg-[#505050] shadow-md !text-white !rounded-md cursor-pointer"
+          routerLink="/perfil-edit"
+          (click)="redirectTo('perfil-edit')"
+        >
+          <mat-icon>edit</mat-icon>Editar perfil
         </button>
       </div>
     </mat-card>
 
     <!-- Actividades de Acceso -->
     <mat-card class="!bg-[#ffffff] mb-6 p-6 !shadow-lg" appearance="outlined">
-      <mat-card-title class="!mb-4 text-xl">Actividades de Accesos</mat-card-title>
+      <mat-card-title class="!mb-4 text-xl"
+        >Actividades de Accesos</mat-card-title
+      >
       <mat-card-content class="space-y-3 text-base text-gray-800">
-        <p><strong>Último acceso al sitio:</strong> {{ userInformation.ultimo_acceso }}</p>
+        <p>
+          <strong>Último acceso al sitio:</strong>
+          {{ userInformation.ultimo_acceso }}
+        </p>
       </mat-card-content>
     </mat-card>
-
   </div>
+
+  <!-- Ultimos recursos publicados -->
+  <mat-card class="!bg-[#ffffff] mb-6 p-6 !shadow-lg" appearance="outlined">
+    <mat-card-title class="text-center !mb-4 text-xl"
+      >Últimos recursos añadidos</mat-card-title
+    >
+    <mat-card-content class="space-y-3 text-base text-gray-800">
+      <!--<p><strong>Último recurso añadido:</strong> 
+          {{ userInformation.ultimo_recurso }}</p> -->
+      <div
+        *ngIf="
+          userInformation.recursos && userInformation.recursos.length > 0;
+          else noResources
+        "
+      >
+        <div
+          *ngFor="let recurso of userInformation.recursos"
+          class="flex items-center"
+        >
+          <mat-icon class="mr-2">insert_drive_file</mat-icon>
+          <span>{{ recurso.nombre }}</span>
+        </div>
+      </div>
+      <ng-template #noResources>
+        <p>No has añadido ningún recurso todavía.</p>
+      </ng-template>
+
+    </mat-card-content>
+  </mat-card>
 </div>
