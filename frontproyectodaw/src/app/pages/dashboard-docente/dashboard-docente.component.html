@@ -1,36 +1,109 @@
 <div class="bg-white p-6 w-full rounded-md shadow-md">
 
-    <mat-tab-group>
-    <mat-tab label="Perfil"> Content 1 </mat-tab>
-    <mat-tab label="Recursos Estuiantes"> Content 2 </mat-tab>
-    <mat-tab label="Recursos Docente"> Content 3 </mat-tab>
-    </mat-tab-group>
-    
-<br>
+  <mat-tab-group>
+    <mat-tab label="Perfil">
+      <div class="p-4">
+        <h2 class="text-xl font-semibold">Bienvenido</h2>
+        <p class="text-sm text-gray-600">He aquí tus últimos movimientos</p>
+      </div>
+    </mat-tab>
 
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-full">
+    <mat-tab label="Recursos Estudiantes">
+      <div class="p-4">
+        <p>Aquí se encuentran todos los Libros, Videos y Documentos que los estudiantes han subido y quieren subir.</p>
 
-    <!-- No. -->
+        <!-- Recursos Subidos -->
+        <h3>Recursos Subidos</h3>
+        <table mat-table [dataSource]="uploadedResources" class="mat-elevation-z8 w-full mb-6">
+          <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef> Título </th>
+            <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef> Tipo </th>
+            <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="uploadedBy">
+            <th mat-header-cell *matHeaderCellDef> Subido por </th>
+            <td mat-cell *matCellDef="let element"> {{element.uploadedBy}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="uploadedDisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: uploadedDisplayedColumns;"></tr>
+        </table>
+
+        <!-- Recursos Pendientes -->
+        <h3>Recursos Pendientes de Aprobación</h3>
+        <table mat-table [dataSource]="pendingResources" class="mat-elevation-z8 w-full">
+          <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef> Título </th>
+            <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef> Tipo </th>
+            <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="submittedBy">
+            <th mat-header-cell *matHeaderCellDef> Propuesto por </th>
+            <td mat-cell *matCellDef="let element"> {{element.submittedBy}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="pendingDisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: pendingDisplayedColumns;"></tr>
+        </table>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Recursos Docente">
+      Content 3
+    </mat-tab>
+  </mat-tab-group>
+
+  <br>
+
+  <!--
+  <mat-card appearance="outlined">
+    <mat-card-content>
+      <h3>Últimos recursos añadidos</h3>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-flat-button color="primary">Añadir recurso</button>
+    </mat-card-actions>
+  </mat-card> -->
+
+  <!-- codigo boton añadir recurso -->
+  <mat-card appearance="outlined">
+  <mat-card-actions align="end">
+  <button mat-flat-button color="primary" (click)="openResourceDialog()">
+    Añadir recurso
+  </button>
+</mat-card-actions>
+</mat-card>
+
+  <br>
+
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-full">
     <ng-container matColumnDef="position">
       <th mat-header-cell *matHeaderCellDef> No. </th>
       <td mat-cell *matCellDef="let element"> {{element.position}} </td>
     </ng-container>
 
-    <!-- Libros -->
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <th mat-header-cell *matHeaderCellDef> Libros </th>
       <td mat-cell *matCellDef="let element"> {{element.name}} </td>
     </ng-container>
 
-    <!-- Videos -->
     <ng-container matColumnDef="weight">
-      <th mat-header-cell *matHeaderCellDef> Weight </th>
+      <th mat-header-cell *matHeaderCellDef> Videos </th>
       <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
     </ng-container>
 
-    <!-- Documentos -->
     <ng-container matColumnDef="symbol">
-      <th mat-header-cell *matHeaderCellDef> Symbol </th>
+      <th mat-header-cell *matHeaderCellDef> Documentos </th>
       <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
     </ng-container>
 
