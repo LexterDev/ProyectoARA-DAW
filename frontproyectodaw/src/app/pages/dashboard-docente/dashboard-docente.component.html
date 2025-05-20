@@ -1,0 +1,41 @@
+<div class="bg-white p-6 w-full rounded-md shadow-md">
+
+    <mat-tab-group>
+    <mat-tab label="Perfil"> Content 1 </mat-tab>
+    <mat-tab label="Recursos Estuiantes"> Content 2 </mat-tab>
+    <mat-tab label="Recursos Docente"> Content 3 </mat-tab>
+    </mat-tab-group>
+    
+<br>
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-full">
+
+    <!-- No. -->
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef> No. </th>
+      <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+    </ng-container>
+
+    <!-- Libros -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <!-- Videos -->
+    <ng-container matColumnDef="weight">
+      <th mat-header-cell *matHeaderCellDef> Weight </th>
+      <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+    </ng-container>
+
+    <!-- Documentos -->
+    <ng-container matColumnDef="symbol">
+      <th mat-header-cell *matHeaderCellDef> Symbol </th>
+      <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+</div>
