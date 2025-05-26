@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "https://proyectodaw-front.onrender.com")
+@CrossOrigin(origins = "https://proyectoara-daw-front.onrender.com")
 @RequiredArgsConstructor
 public class AuthController {
 

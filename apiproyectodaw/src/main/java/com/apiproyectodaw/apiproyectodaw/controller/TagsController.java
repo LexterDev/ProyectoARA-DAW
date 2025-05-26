@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tags")
-@CrossOrigin(origins = "https://proyectodaw-front.onrender.com")
+@CrossOrigin(origins = "https://proyectoara-daw-front.onrender.com")
 public class TagsController {
 
     private final TagsService tagsService;
