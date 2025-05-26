@@ -37,7 +37,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         
         configuration.setAllowCredentials(true);
-        configuration.addAllowedOrigin("https://proyectodaw-front.onrender.com");
+        configuration.addAllowedOrigin("https://proyectoara-daw-front.onrender.com");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         
