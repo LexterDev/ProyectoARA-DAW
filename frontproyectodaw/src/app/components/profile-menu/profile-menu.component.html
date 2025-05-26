@@ -5,15 +5,15 @@
 <mat-menu #menu="matMenu" class="!bg-[#ffffff] !w-80 !rounded-md !shadow-lg mt-3 border-2 border-[#e7e5e5] py-0">
   <div class="px-4 flex flex-col items-center text-center !bg-[#e9e7e7] pb-3 pt-3">
     <img [src]="userInformation.avatar" class="w-36 h-36 rounded-full mb-2" alt="Avatar" />
-    <div class="font-medium text-lg">{{ userInformation.userName }}</div>
+    <div class="font-medium text-lg">{{ userInformation.nombre }}</div>
     <div class="font-medium text-sm text-gray-500">{{ userInformation.rol }}</div>
     <div class="font-medium text-sm text-gray-500">{{ userInformation.email }}</div>
   </div>
   <!-- <mat-divider></mat-divider> -->
-  <button mat-menu-item routerLink="/perfil" (click)="redirectTo('perfil')">
+  <!-- <button mat-menu-item routerLink="/perfil" (click)="redirectTo('perfil')">
     <mat-icon>person</mat-icon>
     <span>Perfil</span>
-  </button>
+  </button> -->
   <button mat-menu-item routerLink="/preferences" (click)="redirectTo('preferences')">
     <mat-icon>settings</mat-icon>
     <span>Preferencias</span>

@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
-import { AuthService } from '../../services/auth.service';
+import { Auth0Service } from '../../services/auth0.service';
 import { Router } from '@angular/router';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-profile-menu',
@@ -18,45 +19,44 @@ import { Router } from '@angular/router';
   templateUrl: './profile-menu.component.html',
   styleUrl: './profile-menu.component.scss'
 })
-export class ProfileMenuComponent {
+export class ProfileMenuComponent implements OnInit, OnDestroy {
 
   userInformation: any = {};
+  private destroy$ = new Subject<void>();
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: Auth0Service) {}
 
   //functionto redirect
   redirectTo(path: string) {
     this.router.navigate([path]);
   }
 
-  nombre: string = '';
-  email: string = '';
-  rol: string = '';
-  avatar: string = '';
-
-  ngOnInit(): void {
-    this.getUserInfo();  
+  ngOnInit() {
+    this.authService.user$.pipe(
+      takeUntil(this.destroy$),
+      map(user => {
+        if (user) {
+          const namespace = 'https://my-app.example.com/';
+          const roles = user[`${namespace}roles`] || [];
+          
+          this.userInformation = {
+            nombre: user.nickname || user.name || '',
+            email: user.email || '',
+            rol: roles.length > 0 ? roles[0] : 'Usuario',
+            avatar: user.picture || ''
+          };
+        }
+      })
+    ).subscribe();
   }
-
-  // get user Info from local storage
-  getUserInfo() {
-    const userName = this.authService.getUserName();
-    const email = this.authService.getUserEmail();
-    const rol = this.authService.getUserRole();
-    const avatar = this.authService.getUserAvatar();
-
-    this.userInformation = {
-      userName: userName,
-      email: email,
-      rol: rol,
-      avatar: avatar
-    };    
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   logout() {
     this.authService.logout();
-    this.router.navigate(['/login']);
-    this.userInformation = null;
+    // this.router.navigate(['/']);
   }
 
 }
