@@ -39,51 +39,7 @@
       </div>
     </mat-card>
 
-    <!-- Actividades de Acceso -->
-    <mat-card class="!bg-[#ffffff] mb-6 p-6 !shadow-lg" appearance="outlined">
-      <mat-card-title class="!mb-4 text-xl"
-        >Actividades de Accesos</mat-card-title
-      >
-      <mat-card-content class="space-y-3 text-base text-gray-800">
-        <p>
-          <strong>Último acceso al sitio:</strong>
-          {{ userInformation.ultimo_acceso }}
-        </p>
-      </mat-card-content>
-    </mat-card>
-
-  </div>
-
-  <!-- Ultimos recursos publicados -->
-  <mat-card class="!bg-[#ffffff] mb-6 p-6 !shadow-lg" appearance="outlined">
-    <mat-card-title class="text-center !mb-4 text-xl"
-      >Últimos recursos añadidos</mat-card-title
-    >
-    <mat-card-content class="space-y-3 text-base text-gray-800">
-      <!--<p><strong>Último recurso añadido:</strong> 
-          {{ userInformation.ultimo_recurso }}</p> -->
-      <div
-        *ngIf="
-          userInformation.recursos && userInformation.recursos.length > 0;
-          else noResources
-        "
-      >
-        <div
-          *ngFor="let recurso of userInformation.recursos"
-          class="flex items-center"
-        >
-          <mat-icon class="mr-2">insert_drive_file</mat-icon>
-          <span>{{ recurso.nombre }}</span>
-        </div>
-      </div>
-      <ng-template #noResources>
-        <p>No has añadido ningún recurso todavía.</p>
-      </ng-template>
-
-    </mat-card-content>
-  </mat-card>
-
-      <!-- Recursos Favoritos -->
+          <!-- Recursos Favoritos -->
     <mat-card class="!bg-[#ffffff] mb-6 p-6 !shadow-lg" appearance="outlined">
       <mat-card-title class="!mb-4 text-xl"
         >Recursos Favoritos</mat-card-title
@@ -118,10 +74,54 @@
             routerLink="/favorites"
             (click)="redirectTo('favorites')"
           >
-            <mat-icon>favorite</mat-icon>Ver favoritos
+          <mat-icon>favorite</mat-icon>Ver favoritos
           </button>
         </div>
       </mat-card-content>
       </mat-card>
+
+    <!-- Actividades de Acceso -->
+    <!-- <mat-card class="!bg-[#ffffff] mb-6 p-6 !shadow-lg" appearance="outlined">
+      <mat-card-title class="!mb-4 text-xl"
+        >Actividades de Accesos</mat-card-title
+      >
+      <mat-card-content class="space-y-3 text-base text-gray-800">
+        <p>
+          <strong>Último acceso al sitio:</strong>
+          {{ userInformation.ultimo_acceso }}
+        </p>
+      </mat-card-content>
+    </mat-card> -->
+
+  </div>
+
+  <!-- Ultimos recursos publicados -->
+  <mat-card class="!bg-[#ffffff] mb-6 p-6 !shadow-lg" appearance="outlined">
+    <mat-card-title class="text-center !mb-4 text-xl"
+      >Últimos recursos añadidos</mat-card-title
+    >
+    <mat-card-content class="space-y-3 text-base text-gray-800">
+      <!--<p><strong>Último recurso añadido:</strong> 
+          {{ userInformation.ultimo_recurso }}</p> -->
+      <div
+        *ngIf="
+          userInformation.recursos && userInformation.recursos.length > 0;
+          else noResources
+        "
+      >
+        <div
+          *ngFor="let recurso of userInformation.recursos"
+          class="flex items-center"
+        >
+          <mat-icon class="mr-2">insert_drive_file</mat-icon>
+          <span>{{ recurso.nombre }}</span>
+        </div>
+      </div>
+      <ng-template #noResources>
+        <p>No has añadido ningún recurso todavía.</p>
+      </ng-template>
+
+    </mat-card-content>
+  </mat-card>
       
 </div>
