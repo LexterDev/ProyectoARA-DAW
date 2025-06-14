@@ -5,6 +5,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
+import { FavoritesComponent } from '../../components/favorites/favorites.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-perfil',
@@ -12,15 +14,28 @@ import { Router } from '@angular/router';
     MatCardModule,
     MatChipsModule,
     CommonModule,
-    MatIconModule
+    MatIconModule,
   ],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.scss'
 })
 export class PerfilComponent {
+  openFavoritesDialog() {
+    const dialogRef = this.dialog.open(FavoritesComponent, {
+      width: '600px',
+      disableClose: true // Opcional: evita que se cierre haciendo clic fuera
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Favorito creado con éxito');
+        // Aquí puedes actualizar la lista de favoritos si es necesario
+      }
+    });
+  }
   userInformation: any = {};
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService, private dialog: MatDialog) {}
 
   redirectTo(path: string) {
     this.router.navigate([path]);
@@ -53,5 +68,6 @@ export class PerfilComponent {
       ultimo_acceso: ultimo_acceso
     };    
   }
+
 
 }

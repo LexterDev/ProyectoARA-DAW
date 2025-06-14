@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 // Environment file
 import { environment } from '../environments/environment';
+import { get } from 'jquery';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +43,7 @@ export class ApiService {
       getById: (id: number) => `${this.apiUrl}/categories/${id}`,
       create: `${this.apiUrl}/categories`,
       update: (id: number) => `${this.apiUrl}/categories/${id}`,
-      delete: (id: number) => `${this.apiUrl}/categories/${id}`
+      delete: (id: number) => `${this.apiUrl}/categories/${id}`,
     },
     licenses:{
     getAll: `${this.apiUrl}/licenses`,
@@ -58,5 +59,12 @@ export class ApiService {
     update: (id: number) => `${this.apiUrl}/users/${id}`,
     delete: (id: number) => `${this.apiUrl}/users/${id}`
   },
+  favorites:{
+    getAll: `${this.apiUrl}/favorites`,
+    getById: (id: number) => `${this.apiUrl}/favorites/${id}`,
+    create: `${this.apiUrl}/favorites`,
+    update: (id: number) => `${this.apiUrl}/favorites/${id}`,
+    delete: (id: string) => `${this.apiUrl}/favorites/${id}`
+  }
 }
 }

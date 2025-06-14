@@ -1,67 +1,70 @@
-import { Component } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { MatDialogRef } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { CategoriesService } from '../../services/categories.service';
-import { EventEmitter, Output } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatListModule } from '@angular/material/list';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-favorites',
+  standalone: true,
   imports: [
-    MatIcon,
     CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
+    MatIconModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatListModule,
+    MatDividerModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './favorites.component.html',
-  styleUrl: './favorites.component.scss'
+  styleUrls: ['./favorites.component.scss']
 })
-export class FavoritesComponent {
-
-  favoriteForm: FormGroup;
-
-  @Output() isCategorySaved = new EventEmitter<any>();
+export class FavoritesComponent implements OnInit {
+  favorites: any[] = [];
+  isLoading = true;
 
   constructor(
-    private dialogRef: MatDialogRef<FavoritesComponent>,
-    private formBuilder: FormBuilder,
+    public dialogRef: MatDialogRef<FavoritesComponent>,
     private categoriesService: CategoriesService
-  ) {
-    this.favoriteForm = this.formBuilder.group({
-      name: ['', [Validators.required]],
-      description: ['', [Validators.required]]
+  ) {}
+
+  ngOnInit() {
+    this.loadFavorites();
+  }
+
+  loadFavorites() {
+    this.isLoading = true;
+    this.categoriesService.getFavorites().subscribe({
+      next: (data) => {
+        this.favorites = data;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar favoritos', error);
+        this.isLoading = false;
+      }
     });
   }
 
-  closeFavoritesCreateDialog() {
-    this.dialogRef.close();
-  }
-
-  editFavorite() {
-    if (this.favoriteForm.valid) {
-      const newFavorite = {
-        nombre: this.favoriteForm.get('name')?.value,
-        descripcion: this.favoriteForm.get('description')?.value,
-      };
-
-      this.categoriesService.createCategory(newFavorite).subscribe({
-        next: (response) => {
-
-          this.isCategorySaved.emit({
-            isCreated: true,
-          });
-          
-          console.log('Favorito editado con éxito', response);
-          // Aquí puedes manejar la respuesta después de crear la categoría
-          this.closeFavoritesCreateDialog();
-          
+  deleteFavorite(favoriteId: string) {
+    if (confirm('¿Estás seguro de eliminar este favorito?')) {
+      this.categoriesService.deleteFavorite(favoriteId).subscribe({
+        next: () => {
+          this.favorites = this.favorites.filter(fav => fav.id !== favoriteId);
         },
         error: (error) => {
-          console.error('Error al editar el favorito', error);
+          console.error('Error al eliminar favorito', error);
         }
       });
     }
   }
 
+  closeDialog() {
+    this.dialogRef.close();
+  }
+  
 }

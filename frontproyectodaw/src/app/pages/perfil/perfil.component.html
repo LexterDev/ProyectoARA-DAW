@@ -69,10 +69,9 @@
         </ng-template>
         <div class="flex justify-start items-center mt-6 px-2">
           <button
-            mat-raised-button
-            class="!bg-[#ad1d7d] flex items-center gap-2 py-2 px-4 !text-lg hover:!bg-[#505050] shadow-md !text-white !rounded-md cursor-pointer"
-            routerLink="/favorites"
-            (click)="redirectTo('favorites')"
+          mat-raised-button
+          class="!bg-[#ad1d7d] flex items-center gap-2 py-2 px-4 !text-lg hover:!bg-[#505050] shadow-md !text-white !rounded-md cursor-pointer"
+          (click)="openFavoritesDialog()"
           >
           <mat-icon>favorite</mat-icon>Ver favoritos
           </button>

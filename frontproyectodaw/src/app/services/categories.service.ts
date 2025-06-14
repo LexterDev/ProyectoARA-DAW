@@ -32,4 +32,10 @@ export class CategoriesService {
   deleteCategory(id: number): Observable<any> {
     return this.http.delete(this.apiService.API_ENDPOINTS.categories.delete(id));
   }
+  getFavorites(): Observable<any> {
+    return this.http.get(this.apiService.API_ENDPOINTS.favorites.getAll);
+  }
+  deleteFavorite(favoriteId: string): Observable<any> {
+    return this.http.delete(this.apiService.API_ENDPOINTS.favorites.delete(favoriteId));
+  }
 }
