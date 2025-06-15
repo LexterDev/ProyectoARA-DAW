@@ -1,0 +1,29 @@
+<div class="p-6">
+  <h2 class="text-xl font-semibold mb-4">Tus recursos favoritos</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <ng-container *ngFor="let favorito of favoritos; let i = index">
+      <mat-card *ngIf="favorito; else noFavorito" class="shadow-md">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>folder</mat-icon>
+          <mat-card-title>Favorito {{ i + 1 }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p><strong>Título:</strong> {{ favorito.name }}</p>
+          <p><strong>Tipo:</strong> {{ favorito.symbol }}</p>
+          <p><strong>Peso:</strong> {{ favorito.weight }}</p>
+        </mat-card-content>
+      </mat-card>
+
+      <ng-template #noFavorito>
+        <mat-card style="background-color: #f3f4f6; color: #1f2937;">
+
+          <mat-card-content class="flex flex-col items-center justify-center py-8">
+            <mat-icon class="text-3xl text-gray-700 mb-2">favorite_border</mat-icon>
+            <p>No tienes favoritos por el momento</p>
+          </mat-card-content>
+        </mat-card>
+      </ng-template>
+    </ng-container>
+  </div>
+</div>

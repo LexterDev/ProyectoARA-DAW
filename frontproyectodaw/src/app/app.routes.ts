@@ -17,24 +17,28 @@ import { PrivacyPoliciesComponent } from './pages/privacy-policies/privacy-polic
 import { GeneralDescriptionComponent } from './pages/general-description/general-description.component';
 import { DashboardDocenteComponent } from './pages/dashboard-docente/dashboard-docente.component';
 
+// NUEVO
+import { FavoritosComponent } from './pages/favoritos/favoritos.component';
 
 export const routes: Routes = [
-    { path: 'login', component: LoginComponent },
-    { path: 'tags', component: TagsComponent },
-    { path: 'categories', component: CategoriesComponent },
-    { path: 'licenses', component: LicensesComponent },
-    { path: 'resources', component: ResourceComponent },
-    {path: 'dashboard', component: DashboardStudentsComponent},
-    { path: '', component: LandingComponent },
-    { path: 'register', component: RegisterComponent },
-    {path: 'perfil', component: PerfilComponent},
-    {path: 'informacion', component: InformacionComponent},
-    {path: 'preferences', component: PreferencesComponent},
-    {path: 'configuracion', component: ConfiguracionComponent},
-    {path: 'perfil-edit', component: PerfilEditComponent},
-    {path: 'terms-conditions', component: TermsConditionsComponent},
-    {path: 'privacy-polices', component: PrivacyPoliciesComponent},
-    {path: 'general-description', component: GeneralDescriptionComponent},
-    {path: 'dashboard-docente', component: DashboardDocenteComponent},
+  { path: 'login', component: LoginComponent },
+  { path: 'tags', component: TagsComponent },
+  { path: 'categories', component: CategoriesComponent },
+  { path: 'licenses', component: LicensesComponent },
+  { path: 'resources', component: ResourceComponent },
+  { path: 'dashboard', component: DashboardStudentsComponent },
+  { path: '', component: LandingComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'perfil', component: PerfilComponent },
+  { path: 'informacion', component: InformacionComponent },
+  { path: 'preferences', component: PreferencesComponent },
+  { path: 'configuracion', component: ConfiguracionComponent },
+  { path: 'perfil-edit', component: PerfilEditComponent },
+  { path: 'terms-conditions', component: TermsConditionsComponent },
+  { path: 'privacy-polices', component: PrivacyPoliciesComponent },
+  { path: 'general-description', component: GeneralDescriptionComponent },
+  { path: 'dashboard-docente', component: DashboardDocenteComponent },
 
+  // NUEVO
+  { path: 'favoritos', component: FavoritosComponent },
 ];

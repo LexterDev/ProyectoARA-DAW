@@ -65,28 +65,28 @@
 
   <br>
 
-  <!--
+  <!-- Botón añadir recurso -->
   <mat-card appearance="outlined">
-    <mat-card-content>
-      <h3>Últimos recursos añadidos</h3>
-    </mat-card-content>
     <mat-card-actions align="end">
-      <button mat-flat-button color="primary">Añadir recurso</button>
+      <button mat-flat-button color="primary" (click)="openResourceDialog()">
+        Añadir recurso
+      </button>
     </mat-card-actions>
-  </mat-card> -->
-
-  <!-- codigo boton añadir recurso -->
-  <mat-card appearance="outlined">
-  <mat-card-actions align="end">
-  <button mat-flat-button color="primary" (click)="openResourceDialog()">
-    Añadir recurso
-  </button>
-</mat-card-actions>
-</mat-card>
+  </mat-card>
 
   <br>
 
+  <!-- nueva parte: Botón para ver favoritos -->
+  <div class="flex justify-end my-4">
+    <button mat-stroked-button color="accent" (click)="verFavoritos()">
+      Ver recursos favoritos
+    </button>
+  </div>
+  <!-- fin nueva parte -->
+
+  <!-- nueva parte: Tabla con botón de favorito -->
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-full">
+
     <ng-container matColumnDef="position">
       <th mat-header-cell *matHeaderCellDef> No. </th>
       <td mat-cell *matCellDef="let element"> {{element.position}} </td>
@@ -107,8 +107,21 @@
       <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <ng-container matColumnDef="favorito">
+      <th mat-header-cell *matHeaderCellDef> </th>
+      <td mat-cell *matCellDef="let recurso">
+        <button mat-icon-button (click)="toggleFavorito(recurso)">
+          <mat-icon [ngClass]="recurso.favorito ? 'text-red-600' : 'text-gray-500'">
+            {{ recurso.favorito ? 'favorite' : 'favorite_border' }}
+          </mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumnsWithFav"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumnsWithFav;"></tr>
+
   </table>
+  <!-- fin nueva parte -->
 
 </div>
