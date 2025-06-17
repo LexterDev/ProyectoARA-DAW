@@ -62,4 +62,8 @@ public class User {
             fechaRegistro = LocalDateTime.now();
         }
     }
+
+    public Long getId() {
+        return id;
+    }
 }

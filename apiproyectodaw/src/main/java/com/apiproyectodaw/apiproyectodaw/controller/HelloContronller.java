@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.apiproyectodaw.apiproyectodaw.model.Message;
 
 @RestController
-@CrossOrigin(origins = "https://proyectoara-daw-front.onrender.com") 
+@CrossOrigin(origins = "http://localhost:4200") 
 @RequestMapping("/api")
 public class HelloContronller {
 

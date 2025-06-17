@@ -20,6 +20,7 @@ import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.compone
 import { AdmindashboardComponent } from './pages/admindashboard/admindashboard.component';
 import { DocentedashboardComponent } from './pages/docentedashboard/docentedashboard.component';
 import { EstudiantedashboardComponent } from './pages/estudiantedashboard/estudiantedashboard.component';
+import { RatingCommentComponent } from './pages/rating-comment/rating-comment.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
@@ -38,6 +39,7 @@ export const routes: Routes = [
     { path: 'terms-conditions', component: TermsConditionsComponent },
     { path: 'privacy-polices', component: PrivacyPoliciesComponent },
     { path: 'general-description', component: GeneralDescriptionComponent },
+    { path: 'rating-comment', component: RatingCommentComponent},
     {
         path: 'estudiante/dashboard',
         component: EstudiantedashboardComponent,

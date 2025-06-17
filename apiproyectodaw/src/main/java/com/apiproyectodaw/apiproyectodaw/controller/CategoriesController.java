@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/categories")
-@CrossOrigin(origins = "https://proyectoara-daw-front.onrender.com") // Permitir peticiones desde cualquier origen
+@CrossOrigin(origins = "http://localhost:4200") // Permitir peticiones desde cualquier origen
 public class CategoriesController {
 
     @Autowired

@@ -13,7 +13,7 @@ import { AuthService } from '../../services/auth.service';
 
 
 @Component({
-  selector: 'app-resource-create',
+  selector: 'app-resource-edit',
   imports: [
     CommonModule,
     MatButtonModule,

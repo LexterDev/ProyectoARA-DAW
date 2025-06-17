@@ -24,7 +24,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
 public class Comments {
 
     @Id
@@ -52,5 +51,37 @@ public class Comments {
             fecha = LocalDateTime.now();
         }
     }
-    
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(User usuario) {
+        this.usuario = usuario;
+    }
+
+    public Resource getRecurso() {
+        return recurso;
+    }
+
+    public void setRecurso(Resource recurso) {
+        this.recurso = recurso;
+    }
+
+    public String getContenido() {
+        return contenido;
+    }
+
+    public void setContenido(String contenido) {
+        this.contenido = contenido;
+    }
+
 }

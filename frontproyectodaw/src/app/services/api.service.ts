@@ -58,5 +58,22 @@ export class ApiService {
     update: (id: number) => `${this.apiUrl}/users/${id}`,
     delete: (id: number) => `${this.apiUrl}/users/${id}`
   },
+  ratings: {
+    getAll: `${this.apiUrl}/ratings`,
+    getById: (id: number) => `${this.apiUrl}/ratings/${id}`,
+    create: `${this.apiUrl}/ratings`,
+    update: (id: number) => `${this.apiUrl}/ratings/${id}`,
+    delete: (id: number) => `${this.apiUrl}/ratings/${id}`,
+    getByUserAndResource: (userId: number, resourceId: number) => `${this.apiUrl}/ratings/user/${userId}/resource/${resourceId}`,
+    getByResourceId: (resourceId: number) => `${this.apiUrl}/ratings/resource/${resourceId}`
+},
+  comments: {
+    getByResourceId: (id: number) => `${this.apiUrl}/comments/resource/${id}`,
+    getByUserId: (id: number) => `${this.apiUrl}/comments/user/${id}`,
+    create: `${this.apiUrl}/comments`,
+    update: (id: number) => `${this.apiUrl}/comments/${id}`,
+    delete: (id: number) => `${this.apiUrl}/comments/${id}`
+},
+
 }
 }

@@ -1,0 +1,69 @@
+<div class="bg-white p-6 w-full rounded-md shadow-md">
+  <h2 class="text-3xl font-bold mb-4 text-black">Calificar este recurso</h2>
+
+  <div class="border-b border-gray-300 mb-4"></div>
+
+  <div class="flex justify-between items-center mb-4 cursor-pointer" 
+       [style.fontSize]="'3rem'">
+    <!-- A la izquierda están las estrellas -->
+    <div class="stars">
+      <ng-container *ngFor="let star of stars; let i = index">
+        <span
+          class="star"
+          [class.filled]="i < rating"
+          (click)="editRating(i + 1)"
+        >&#9733;</span>
+      </ng-container>
+    </div>
+
+    <!-- A la derecha el botón -->
+    <button mat-raised-button
+      class="!bg-[#ad1d7d] flex py-2 px-2 !text-lg hover:!bg-[#505050] !text-white !rounded-md justify-center cursor-pointer hover:bg-[#303030]"
+      (click)="openCommentCreateDialog()">
+      <mat-icon class="mr-2">post_add</mat-icon>
+      Agregar nuevo comentario
+    </button>
+  </div>
+
+  <div class="border-b border-gray-300 mb-4"></div>
+  <h2 class="text-3xl font-bold mb-4 text-black">Comentarios</h2>
+
+ <div *ngFor="let comment of listComments" 
+     class="mb-4 p-4 bg-gray-100 rounded-md shadow-md">
+  
+  <!-- Avatar + nombre -->
+  <div class="flex items-center mb-3">
+    <img *ngIf="comment.usuario?.avatar; else fallbackAvatar" 
+         [src]="comment.usuario.avatar" 
+         alt="avatar" 
+         class="mr-3 w-10 h-10 rounded-full">
+    <ng-template #fallbackAvatar>
+      <mat-icon
+        class="mr-3 !text-[#ad1d7d] !bg-gray-200 p-2 rounded-full flex items-center justify-center w-10 h-10">
+        account_circle
+      </mat-icon>
+    </ng-template>
+
+    <span class="font-semibold">{{ comment.usuario?.nombre }}</span>
+  </div>
+
+  <!-- Estrellas y fecha con hora -->
+  <div class="flex items-center mb-3">
+    <span class="text-xs pe-none mr-4">
+      <ng-container *ngFor="let star of stars; let i = index">
+        <span [class.filled]="i < comment.calificacion" 
+              class="star tiny mr-1">
+          &#9733;
+        </span>
+      </ng-container>
+    </span>
+
+    <span class="text-gray-500 text-xs ml-auto">
+      {{ comment.fechaPublicacion | date:'medium' }}
+    </span>
+  </div>
+
+  <!-- Comentario -->
+  <p>{{ comment.contenido }}</p>
+</div>
+</div>
