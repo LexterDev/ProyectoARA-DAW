@@ -26,7 +26,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/resources")
-@CrossOrigin(origins = "https://proyectoara-daw-front.onrender.com")
+@CrossOrigin(origins = "https://localhost:4200")
 public class ResourceController {
 
     @Autowired

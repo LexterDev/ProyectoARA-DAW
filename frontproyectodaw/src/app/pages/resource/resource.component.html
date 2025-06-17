@@ -20,7 +20,7 @@
                 </button>
             </div>
 
-            <div class="table-container mt-6 overflow-x-auto">
+            <!-- <div class="table-container mt-6 overflow-x-auto">
                 <table datatable [dtOptions]="dtOptions" class="row-border hover custom-data-table w-full">
                     <thead>
                         <tr>
@@ -60,7 +60,43 @@
                         </tr>
                     </tbody>
                 </table>
+            </div> -->
+
+            <!-- Cards container -->
+            <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <mat-card *ngFor="let recurso of listResources"
+                    class="cursor-pointer hover:!shadow-lg transition-shadow duration-300 rounded-lg p-4 !bg-white"
+                     appearance="outlined">
+                    <div class="header-container flex items-center justify-between">
+                        <mat-icon class="text-4xl !text-[#ad1d7d] mr-2">{{ recurso.icon }}</mat-icon>
+
+                        <!-- Agregar a favoritos -->
+                        <button mat-icon-button (click)="toggleFavorite(recurso)">
+                            <mat-icon>{{ recurso.isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+                        </button>
+
+                    </div>
+                    <!-- Divider -->
+                    <div class="border-b border-gray-300 mb-2 mt-2"></div>
+                    <mat-card-header>
+
+                        <mat-card-title class="text-lg font-semibold">{{ recurso.titulo }}</mat-card-title>
+                        <mat-card-subtitle class="text-sm text-gray-600">{{ recurso.tipo }}</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p class="text-gray-700">{{ recurso.descripcion }}</p>
+                        <p class="text-sm text-gray-500 mt-2">Categoría: {{ recurso.categoria?.nombre }}</p>
+                        <p class="text-sm text-gray-500">Licencia: {{ recurso.licencia?.nombre }}</p>
+                        <p class="text-sm text-gray-500">Subido por: {{ recurso.usuario?.nombre }}</p>
+                        <p class="text-sm text-gray-500">Fecha de subida: {{ recurso.fechaSubida | date:'short' }}</p>
+                    </mat-card-content>
+                    <mat-card-actions class="justify-end">
+                        <button mat-button color="primary" (click)="openResourcesEditDialog(recurso)">Editar</button>
+                        <button mat-button color="warn" (click)="deleteResource(recurso.id)">Eliminar</button>
+                    </mat-card-actions>
+
+                </mat-card>
+
             </div>
         </div>
     </div>
-</div>
