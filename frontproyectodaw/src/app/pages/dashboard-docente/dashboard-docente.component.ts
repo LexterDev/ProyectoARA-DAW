@@ -8,7 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router'; // NUEVO
+import { Router } from '@angular/router';
 import { ResourceCreateComponent } from '../../components/resource-create/resource-create.component';
 
 @Component({
@@ -28,29 +28,27 @@ import { ResourceCreateComponent } from '../../components/resource-create/resour
   styleUrls: ['./dashboard-docente.component.scss']
 })
 export class DashboardDocenteComponent implements OnInit {
-  // Tabla final
   displayedColumnsWithFav: string[] = ['position', 'name', 'weight', 'symbol', 'favorito'];
 
   dataSource: any[] = [
     { id: 1, position: 1, name: 'Libro A', weight: 1.0, symbol: 'PDF', favorito: false },
     { id: 2, position: 2, name: 'Video B', weight: 2.5, symbol: 'MP4', favorito: false },
-    { id: 3, position: 3, name: 'Documento C', weight: 1.2, symbol: 'DOC', favorito: false }
+    { id: 3, position: 3, name: 'Documento C', weight: 1.2, symbol: 'DOC', favorito: false },
+    { id: 4, position: 4, name: 'Libro A', weight: 1.0, symbol: 'PDF', favorito: false }
   ];
 
-  // Tabla de recursos subidos
   uploadedDisplayedColumns: string[] = ['title', 'type', 'uploadedBy'];
   uploadedResources: any[] = [];
 
-  // Tabla de recursos pendientes
   pendingDisplayedColumns: string[] = ['title', 'type', 'submittedBy'];
   pendingResources: any[] = [];
 
   mostrarFormulario: boolean = false;
 
-  constructor(private dialog: MatDialog, private router: Router) {} // MODIFICADO
+  constructor(private dialog: MatDialog, private router: Router) {}
 
   ngOnInit(): void {
-    this.cargarFavoritosDesdeStorage(); // NUEVO
+    this.cargarFavoritosDesdeStorage();
   }
 
   openResourceDialog(): void {
@@ -66,19 +64,41 @@ export class DashboardDocenteComponent implements OnInit {
     });
   }
 
-  // NUEVO: método para marcar favorito por recurso
+  // NUEVO: guardar y alternar recurso completo
   toggleFavorito(recurso: any): void {
+    let favoritosArray = JSON.parse(localStorage.getItem('favoritosDocente') || '[]');
+
+    const contenidoDuplicado = favoritosArray.some((r: any) =>
+      r.id !== recurso.id &&
+      r.name === recurso.name &&
+      r.weight === recurso.weight &&
+      r.symbol === recurso.symbol &&
+      r.favorito
+    );
+
+    if (contenidoDuplicado && !recurso.favorito) {
+      alert('Este recurso ya está marcado como favorito (mismo contenido).');
+      return;
+    }
+
     recurso.favorito = !recurso.favorito;
-    this.guardarFavoritosEnStorage();
+
+    const index = favoritosArray.findIndex((r: any) => r.id === recurso.id);
+
+    if (index !== -1) {
+      favoritosArray[index] = { ...recurso }; // guarda todo
+    } else {
+      favoritosArray.push({ ...recurso });
+    }
+
+    localStorage.setItem('favoritosDocente', JSON.stringify(favoritosArray));
   }
 
-  // NUEVO: guardar favoritos localmente
   guardarFavoritosEnStorage(): void {
-    const favoritos = this.dataSource.map(r => ({ id: r.id, favorito: r.favorito }));
+    const favoritos = this.dataSource.map(r => ({ ...r }));
     localStorage.setItem('favoritosDocente', JSON.stringify(favoritos));
   }
 
-  // NUEVO: cargar favoritos al iniciar
   cargarFavoritosDesdeStorage(): void {
     const stored = localStorage.getItem('favoritosDocente');
     if (stored) {
@@ -92,12 +112,7 @@ export class DashboardDocenteComponent implements OnInit {
     }
   }
 
-  // NUEVO: redirigir a vista de favoritos
   verFavoritos(): void {
-    this.router.navigate(['/favoritos']); // ACTUALIZADO
+    this.router.navigate(['/favoritos']);
   }
-
-  // AQUI TERMINA
 }
-
-
