@@ -15,7 +15,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { ProfileMenuComponent } from './components/profile-menu/profile-menu.component';
-import { AuthService } from './services/auth.service';
+import { Auth0Service } from './services/auth0.service';
+import { Observable, map, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 
 @Component({
@@ -48,36 +50,66 @@ export class AppComponent implements OnInit {
   isSidenavOpen = true;
   isUserLoggedIn: boolean = false;
 
-
-  constructor(private http: HttpClient, private router: Router, public route: ActivatedRoute, private authService: AuthService) {}
+  constructor(private http: HttpClient, private router: Router, public route: ActivatedRoute, public authService: Auth0Service) {}
 
   toggleMenu() {
     this.isSidenavOpen = !this.isSidenavOpen;
   }
 
   ngOnInit(): void {
-    this.saveUser('1');
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.isUserLoggedIn = this.authService.isLoggedIn();        
-      }
-    });
+    this.authService.isAuthenticated$
+      .pipe(
+        switchMap(isAuthenticated => {
+          if (isAuthenticated) {
+            return this.authService.user$;
+          }
+          return of(null);
+        })
+      )
+      .subscribe(user => {
+        if (user) {
+          const roles = user['https://my-app.example.com/roles'] || [];
+
+          // Evita redirigir si ya está en otra ruta
+          if (this.router.url === '/' || this.router.url === '/login') {
+            // Redireccionamos según el primer rol encontrado
+            if (roles.includes('ADMIN')) {
+              this.router.navigate(['/admin/dashboard']);
+            } else if (roles.includes('DOCENTE')) {
+              this.router.navigate(['/docente/dashboard']);
+            } else if (roles.includes('ESTUDIANTE')) {
+              this.router.navigate(['/estudiante/dashboard']);
+            } else {
+              this.router.navigate(['/unauthorized']);
+            }
+          }
+        }
+      });
   }
   
   // Funcion para guar usuario en localstorage
-  saveUser(user: any) {
-    localStorage.setItem('user', JSON.stringify(user));
-  }
+  // saveUser(user: any) {
+  //   localStorage.setItem('user', JSON.stringify(user));
+  // }
 
   // Función para redireccionar a la página de login
   redirectToLogin() {
-    this.router.navigate(['/login']);
+    // this.router.navigate(['/login']);
+    // this.authService.loginWithRedirect();
+    this.authService.login();
   }
 
   // Función para redireccionar a la página de registro
   redirectToRegister() {
-    this.router.navigate(['/register']);
+    this.authService.register();
   }
+
+  // Función para cerrar sesión
+  logout() {
+    this.authService.logout();
+    // this.router.navigate(['/login']);
+  }
+    
 
 
 }

@@ -38,7 +38,51 @@ export const routes: Routes = [
   { path: 'privacy-polices', component: PrivacyPoliciesComponent },
   { path: 'general-description', component: GeneralDescriptionComponent },
   { path: 'dashboard-docente', component: DashboardDocenteComponent },
-
   // NUEVO
   { path: 'favoritos', component: FavoritosComponent },
+import { RoleGuard } from './auth/role.guard';
+import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
+import { AdmindashboardComponent } from './pages/admindashboard/admindashboard.component';
+import { DocentedashboardComponent } from './pages/docentedashboard/docentedashboard.component';
+import { EstudiantedashboardComponent } from './pages/estudiantedashboard/estudiantedashboard.component';
+
+export const routes: Routes = [
+    { path: 'login', component: LoginComponent },
+    { path: 'tags', component: TagsComponent },
+    { path: 'categories', component: CategoriesComponent },
+    { path: 'licenses', component: LicensesComponent },
+    { path: 'resources', component: ResourceComponent },
+    { path: 'dashboard', component: DashboardStudentsComponent },
+    { path: '', component: LandingComponent },
+    { path: 'register', component: RegisterComponent },
+    { path: 'perfil', component: PerfilComponent },
+    { path: 'informacion', component: InformacionComponent },
+    { path: 'preferences', component: PreferencesComponent },
+    { path: 'configuracion', component: ConfiguracionComponent },
+    { path: 'perfil-edit', component: PerfilEditComponent },
+    { path: 'terms-conditions', component: TermsConditionsComponent },
+    { path: 'privacy-polices', component: PrivacyPoliciesComponent },
+    { path: 'general-description', component: GeneralDescriptionComponent },
+    {
+        path: 'estudiante/dashboard',
+        component: EstudiantedashboardComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ESTUDIANTE'] }
+    },
+    {
+        path: 'docente/dashboard',
+        component: DocentedashboardComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['DOCENTE'] }
+    },
+    {
+        path: 'admin/dashboard',
+        component: AdmindashboardComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+    },
+    {
+        path: 'unauthorized',
+        component: UnauthorizedComponent
+    }
 ];

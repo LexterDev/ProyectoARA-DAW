@@ -47,10 +47,26 @@ export class AuthService {
         const token = sessionStorage.getItem('token');
         if (token) {
             const payload = token.split('.')[1];
-            const decodedPayload = JSON.parse(atob(payload));
-            return decodedPayload.nombre;
+            
+            // Convertir Base64Url a Base64 estándar
+            const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+            
+            // Decodificar Base64
+            const rawData = atob(base64);
+            
+            // Convertir a array de bytes
+            const outputArray = new Uint8Array(rawData.length);
+            for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+            
+            // Decodificar como UTF-8
+            const payloadText = new TextDecoder('utf-8').decode(outputArray);
+            const payloadData = JSON.parse(payloadText);
+            
+            return payloadData.nombre;
         }
-        return null;
+       return null;
     }
 
     getUserEmail(): string | null {
