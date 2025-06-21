@@ -1,9 +1,8 @@
 <div class="bg-white p-6 w-full rounded-md shadow-md">
-  @if (isLoading) {
-    <div class="loadingData flex items-center justify-center">
-      <mat-spinner></mat-spinner>
-    </div>
-  }
+  <!-- ✅ Correcto: usar *ngIf -->
+  <div *ngIf="isLoading" class="loadingData flex items-center justify-center">
+    <mat-spinner></mat-spinner>
+  </div>
 
   <div *ngIf="!isLoading" class="w-full">
     <h1 class="text-3xl font-bold mb-4 text-black">Tus recursos favoritos</h1>

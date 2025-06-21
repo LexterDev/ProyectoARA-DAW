@@ -7,10 +7,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-import { MatPaginatorModule } from '@angular/material/paginator'; // ✅ NUEVO
 
 import { ResourceEditComponent } from '../../components/resource-edit/resource-edit.component';
 import { ResourceService } from '../../services/resource.service';
+import { Auth0Service } from '../../services/auth0.service'; // ✅ Import necesario
 
 @Component({
   selector: 'app-favoritos',
@@ -22,16 +22,13 @@ import { ResourceService } from '../../services/resource.service';
     MatIconModule,
     MatProgressSpinnerModule,
     MatButtonModule,
-    MatDialogModule,
-    MatPaginatorModule // ✅ NUEVO
+    MatDialogModule
   ]
 })
 export class FavoritosComponent implements OnInit {
   favoritos: any[] = [];
-  paginatedFavoritos: any[] = []; // ✅ NUEVO
   isLoading: boolean = false;
-  pageSize: number = 4; // ✅ NUEVO
-  pageIndex: number = 0; // ✅ NUEVO
+  currentUserId: string = ''; // ✅ Guardamos el ID del usuario
 
   icons: any[] = [
     { type: 'PDF', icon: 'picture_as_pdf' },
@@ -44,11 +41,16 @@ export class FavoritosComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private router: Router,
-    private resourceService: ResourceService
+    private resourceService: ResourceService,
+    private authService: Auth0Service // ✅ Inyección del servicio Auth0
   ) {}
 
   ngOnInit(): void {
-    this.cargarFavoritos();
+    // ✅ Obtener ID del usuario logueado
+    this.authService.user$.subscribe((user: any) => {
+      this.currentUserId = user?.sub || '';
+      this.cargarFavoritos();
+    });
   }
 
   cargarFavoritos(): void {
@@ -56,24 +58,16 @@ export class FavoritosComponent implements OnInit {
     const guardados = localStorage.getItem('favoritos');
     const favoritosLocales = guardados ? JSON.parse(guardados) : [];
 
+    // ✅ Filtrar favoritos por ID de usuario
     this.favoritos = favoritosLocales
-      .filter((r: any) => r.favorito === true)
+      .filter((r: any) => r.favorito === true && r.userId === this.currentUserId)
       .map((resource: any) => ({
         ...resource,
         isFavorite: true,
         icon: this.icons.find(icon => icon.type === resource.tipo)?.icon || 'insert_drive_file'
       }));
 
-    // ✅ NUEVO: Inicializar la página 1 de favoritos
-    this.paginatedFavoritos = this.favoritos.slice(0, this.pageSize);
     this.isLoading = false;
-  }
-
-  // ✅ NUEVO: Cambiar de página en el paginador
-  onPageChange(event: any): void {
-    const startIndex = event.pageIndex * event.pageSize;
-    const endIndex = startIndex + event.pageSize;
-    this.paginatedFavoritos = this.favoritos.slice(startIndex, endIndex);
   }
 
   toggleFavorite(resource: any): void {
@@ -82,12 +76,12 @@ export class FavoritosComponent implements OnInit {
     const guardados = localStorage.getItem('favoritos');
     let favoritos = guardados ? JSON.parse(guardados) : [];
 
-    const index = favoritos.findIndex((r: any) => r.id === resource.id);
+    const index = favoritos.findIndex((r: any) => r.id === resource.id && r.userId === this.currentUserId);
 
     if (index > -1) {
       favoritos[index].favorito = resource.isFavorite;
     } else {
-      favoritos.push({ ...resource, favorito: resource.isFavorite });
+      favoritos.push({ ...resource, favorito: resource.isFavorite, userId: this.currentUserId }); // ✅ Se asocia el recurso al usuario
     }
 
     localStorage.setItem('favoritos', JSON.stringify(favoritos));
@@ -137,10 +131,8 @@ export class FavoritosComponent implements OnInit {
 
             const guardados = localStorage.getItem('favoritos');
             let favoritos = guardados ? JSON.parse(guardados) : [];
-            favoritos = favoritos.filter((r: any) => r.id !== id);
+            favoritos = favoritos.filter((r: any) => !(r.id === id && r.userId === this.currentUserId)); // ✅ Borra solo del usuario actual
             localStorage.setItem('favoritos', JSON.stringify(favoritos));
-
-            this.paginatedFavoritos = this.favoritos.slice(0, this.pageSize); // ✅ NUEVO: actualizar paginado
 
             Swal.fire({
               icon: 'success',

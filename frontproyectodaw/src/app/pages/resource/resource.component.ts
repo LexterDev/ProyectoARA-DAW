@@ -12,9 +12,11 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { ResourceEditComponent } from '../../components/resource-edit/resource-edit.component';
 import { MatCardModule } from '@angular/material/card';
+import { Auth0Service } from '../../services/auth0.service'; // ✅ CORREGIDO
 
 @Component({
   selector: 'app-resource',
+  standalone: true,
   imports: [
     DataTablesModule,
     MatIcon,
@@ -27,9 +29,9 @@ import { MatCardModule } from '@angular/material/card';
   styleUrl: './resource.component.scss'
 })
 export class ResourceComponent implements OnInit {
-
   listResources: any[] = [];
   isLoading: boolean = false;
+  currentUserId: string = ''; // ✅ NUEVO
 
   icons: any[] = [
     { type: 'PDF', icon: 'picture_as_pdf' },
@@ -42,7 +44,8 @@ export class ResourceComponent implements OnInit {
   constructor(
     private resourceService: ResourceService,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private authService: Auth0Service // ✅ NUEVO
   ) {}
 
   dtOptions: Config = {
@@ -69,7 +72,11 @@ export class ResourceComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading = true;
-    this.getAllResources();
+
+    this.authService.user$.subscribe((user: any) => { // ✅ CORREGIDO
+      this.currentUserId = user?.sub || '';
+      this.getAllResources();
+    });
   }
 
   getAllResources(): void {
@@ -79,7 +86,7 @@ export class ResourceComponent implements OnInit {
         const favoritos = guardados ? JSON.parse(guardados) : [];
 
         this.listResources = res.map((resource: any) => {
-          const fav = favoritos.find((f: any) => f.id === resource.id);
+          const fav = favoritos.find((f: any) => f.id === resource.id && f.userId === this.currentUserId);
           return {
             ...resource,
             isFavorite: fav ? fav.favorito : false,
@@ -88,7 +95,6 @@ export class ResourceComponent implements OnInit {
         });
 
         this.isLoading = false;
-        console.log(this.listResources);
       },
       error: (err) => {
         console.log(err);
@@ -171,22 +177,18 @@ export class ResourceComponent implements OnInit {
     });
   }
 
-  openResourceDetailsDialog(resource: any): void {
-    // Implementar si es necesario
-  }
-
   toggleFavorite(resource: any): void {
     resource.isFavorite = !resource.isFavorite;
 
     const guardados = localStorage.getItem('favoritos');
     let favoritos = guardados ? JSON.parse(guardados) : [];
 
-    const index = favoritos.findIndex((r: any) => r.id === resource.id);
+    const index = favoritos.findIndex((r: any) => r.id === resource.id && r.userId === this.currentUserId);
 
     if (index > -1) {
       favoritos[index].favorito = resource.isFavorite;
     } else {
-      favoritos.push({ ...resource, favorito: resource.isFavorite });
+      favoritos.push({ ...resource, favorito: resource.isFavorite, userId: this.currentUserId }); // ✅ Asociar con el usuario
     }
 
     localStorage.setItem('favoritos', JSON.stringify(favoritos));

@@ -1,18 +1,22 @@
 <!-- Component Start -->
 <div class="flex flex-col items-center h-full overflow-hidden text-gray-700 bg-gray-100 w-full py-[85px] ">
     <!-- <a class="flex items-center w-full px-3 py-[65px] mt-3" href="#"> -->
-        <p class="text-center font-bold text-3xl">Proyecto ARA</p>
+    <p class="text-center font-bold text-3xl">Proyecto ARA</p>
     <!-- </a> -->
     <div class="w-full px-2">
         <div class="flex flex-col items-center w-full mt-3 border-t border-gray-300">
             <!-- Home -->
-            <a *ngFor="let option of menuItems"  class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-[#ad1d7d] hover:text-white cursor-pointer"
-               [routerLink]="option.path" routerLinkActive="bg-[#ad1d7d] text-white" ariaCurrentWhenActive="page" (click)="redirectTo(option.path)">
-               <mat-icon>{{ option.icon }}</mat-icon>
+            <a *ngFor="let option of menuItems"
+                class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-[#ad1d7d] hover:text-white cursor-pointer"
+                [routerLink]="option.path" routerLinkActive="bg-[#ad1d7d] text-white" ariaCurrentWhenActive="page"
+                (click)="redirectTo(option.path)">
+                <mat-icon>{{ option.icon }}</mat-icon>
                 <span class="ml-2 text-sm font-medium">{{ option.title }}</span>
             </a>
 
-            <!-- <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-[#ad1d7d] hover:text-white cursor-pointer"
+            
+
+<!-- <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-[#ad1d7d] hover:text-white cursor-pointer"
             routerLink="/dashboard" routerLinkActive="bg-[#ad1d7d] text-white" ariaCurrentWhenActive="page" (click)="redirectTo('dashboard')">
              <svg class="w-6 h-6 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                  stroke="currentColor">
@@ -62,5 +66,5 @@
                 </svg>
                 <span class="ml-2 text-sm font-medium">Categorias</span>
             </a> -->
-        </div>
-        <!-- Lo demás se queda igual -->
+</div>
+<!-- Lo demás se queda igual -->
