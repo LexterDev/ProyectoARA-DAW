@@ -63,36 +63,44 @@
             </div> -->
 
             <!-- Cards container -->
-            <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
                 <mat-card *ngFor="let recurso of listResources"
                     class="cursor-pointer hover:!shadow-lg transition-shadow duration-300 rounded-lg p-4 !bg-white"
-                     appearance="outlined">
+                     appearance="outlined" (click)="openRessourceViewDialog(recurso, $event)">
                     <div class="header-container flex items-center justify-between">
                         <mat-icon class="text-4xl !text-[#ad1d7d] mr-2">{{ recurso.icon }}</mat-icon>
 
                         <!-- Agregar a favoritos -->
-                        <button mat-icon-button (click)="toggleFavorite(recurso)">
-                            <mat-icon>{{ recurso.isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+                        <button mat-icon-button (click)="toggleFavorite(recurso, $event)">
+                            <mat-icon ngClass="{
+                                '!text-red-500': recurso.isFavorite,
+                                '!text-gray-400': !recurso.isFavorite
+                            }">{{ recurso.isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
                         </button>
 
                     </div>
                     <!-- Divider -->
                     <div class="border-b border-gray-300 mb-2 mt-2"></div>
-                    <mat-card-header>
+                    <!-- <mat-card-header>
 
-                        <mat-card-title class="text-lg font-semibold">{{ recurso.titulo }}</mat-card-title>
-                        <mat-card-subtitle class="text-sm text-gray-600">{{ recurso.tipo }}</mat-card-subtitle>
-                    </mat-card-header>
+                        <mat-card-title class="text-3xl font-semibold">{{ recurso.titulo }}</mat-card-title>
+                        <!-- <mat-card-subtitle class="text-sm text-gray-600">{{ recurso.tipo }}</mat-card-subtitle>
+                    </mat-card-header> -->
+                    <img mat-card-image [src]="recurso.image" alt="Photo of a Shiba Inu">
                     <mat-card-content>
-                        <p class="text-gray-700">{{ recurso.descripcion }}</p>
+                        <!-- Título -->
+                        <h2 class="text-2xl font-semibold mb-2 mt-3 text-center">{{ recurso.titulo }}</h2>
+                        <!-- Divider -->
+                        <div class="border-b border-gray-300 mb-2"></div>
+                        <p class="mb-4 text-md">{{ recurso.descripcion }}</p>
                         <p class="text-sm text-gray-500 mt-2">Categoría: {{ recurso.categoria?.nombre }}</p>
-                        <p class="text-sm text-gray-500">Licencia: {{ recurso.licencia?.nombre }}</p>
+                        <!-- <p class="text-sm text-gray-500">Licencia: {{ recurso.licencia?.nombre }}</p>
                         <p class="text-sm text-gray-500">Subido por: {{ recurso.usuario?.nombre }}</p>
-                        <p class="text-sm text-gray-500">Fecha de subida: {{ recurso.fechaSubida | date:'short' }}</p>
+                        <p class="text-sm text-gray-500">Fecha de subida: {{ recurso.fechaSubida | date:'short' }}</p> -->
                     </mat-card-content>
                     <mat-card-actions class="justify-end">
-                        <button mat-button color="primary" (click)="openResourcesEditDialog(recurso)">Editar</button>
-                        <button mat-button color="warn" (click)="deleteResource(recurso.id)">Eliminar</button>
+                        <button mat-button color="primary" (click)="openResourcesEditDialog(recurso,$event)">Editar</button>
+                        <button mat-button color="warn" (click)="deleteResource(recurso.id, $event)">Eliminar</button>
                     </mat-card-actions>
 
                 </mat-card>

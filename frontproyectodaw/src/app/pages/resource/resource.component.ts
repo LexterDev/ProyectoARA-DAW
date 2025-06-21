@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2'
 import { ResourceEditComponent } from '../../components/resource-edit/resource-edit.component';
 import { MatCardModule } from '@angular/material/card';
+import { RessourceViewComponent } from '../../components/ressource-view/ressource-view.component';
 
 @Component({
   selector: 'app-resource',
@@ -31,11 +32,12 @@ export class ResourceComponent implements OnInit {
   listResources: any[] = [];
   isLoading: boolean = false;
   icons: any[] = [
-    { type: 'PDF', icon: 'picture_as_pdf' },
-    { type: 'VIDEO', icon: 'video_library' },
-    { type: 'Video', icon: 'video_library' },
-    { type: 'IMAGE', icon: 'image' },
-    { type: 'OTRO', icon: 'insert_drive_file' }
+    { type: 'PDF', icon: 'picture_as_pdf', image: 'document-default.jpg' },
+    { type: 'VIDEO', icon: 'video_library', image: 'video_default.jpg' },
+    { type: 'Video', icon: 'video_library', image: 'video_default.jpg' },
+    { type: 'IMAGE', icon: 'image', image: 'image-default.jpg' },
+    { type: 'Imagen', icon: 'image', image: 'image-default.jpg' },
+    { type: 'OTRO', icon: 'insert_drive_file', imagen: 'other-default.jpg' },
   ]
 
   constructor(
@@ -71,6 +73,8 @@ export class ResourceComponent implements OnInit {
     ngOnInit() {
       this.isLoading = true;
       this.getAllResources();
+
+      this.getAllFavorites();
     }
 
     //get all resources
@@ -82,7 +86,8 @@ export class ResourceComponent implements OnInit {
             ...resource,
             isFavorite: false,
             // Asignar el icono basado en el tipo de recurso puede ser PDF, Video, Imagen u otro.
-            icon: this.icons.find(icon => icon.type === resource.tipo)?.icon || 'insert_drive_file'
+            icon: this.icons.find(icon => icon.type === resource.tipo)?.icon || 'insert_drive_file',
+            image: this.icons.find(icon => icon.type === resource.tipo)?.image || 'other-default.jpg'
           }));
           // this.listResources = res;
         this.isLoading = false;
@@ -119,7 +124,8 @@ export class ResourceComponent implements OnInit {
       });
     }
 
-    openResourcesEditDialog(resource: any) {
+    openResourcesEditDialog(resource: any, event: Event) {
+      event.stopPropagation();
       const dialogRef = this.dialog.open(ResourceEditComponent, {
         width: '500px',
         data: {
@@ -145,7 +151,8 @@ export class ResourceComponent implements OnInit {
       });
     }
 
-    deleteResource(id: number) {
+    deleteResource(id: number, event: Event) {
+      event.stopPropagation();
       Swal.fire({
         title: '¿Estás seguro?',
         text: "¡No podrás revertir esto!",
@@ -175,9 +182,37 @@ export class ResourceComponent implements OnInit {
     openResourceDetailsDialog(resource: any) {
     }
 
-    toggleFavorite(resource: any) {
+    toggleFavorite(resource: any, event: Event) {
+    event.stopPropagation();
+    const favoritesArray = JSON.parse(localStorage.getItem('favorites') || '[]');
 
-     console.log('Recurso favorito toggled:', resource);
+     favoritesArray.push(resource);
+
+     localStorage.setItem('favorites', JSON.stringify(favoritesArray));
+
+    //  Set isFavorite to true for the resource in the listResources
+    const resourceIndex = this.listResources.findIndex((res) => res.id === resource.id);
+    if (resourceIndex !== -1) {
+      this.listResources[resourceIndex].isFavorite = true;
+    }
+  }
+
+    getAllFavorites() {
+      const favoritesArray = JSON.parse(localStorage.getItem('favorites') || '[]');
+      
+    }
+
+    openRessourceViewDialog(resource: any, event: Event) {
+      event.stopPropagation();
+      const dialogRef = this.dialog.open(RessourceViewComponent, {
+        width: '85vw',
+        height: '85vh',
+        maxWidth: '85vw',
+        maxHeight: '85vh',
+        data: {
+          resourceObject: resource
+        }
+      });
     }
 
 }

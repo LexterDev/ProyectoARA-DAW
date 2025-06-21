@@ -26,7 +26,7 @@ export class MainMenuComponent implements OnInit {
   // Generar el menú dinámicamente
   generateMenu() {
     this.authService.getUserRoles().subscribe((roles: string[]) => {
-      console.log(roles);
+      
       if (roles.includes('ADMIN')) {
         this.menuItems.push({ title: 'Dashboard', path: '/admin/dashboard', icon : 'widgets' });
         this.menuItems.push({ title: 'Categorias', path: 'categories', icon : 'category' });

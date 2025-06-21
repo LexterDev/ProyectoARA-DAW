@@ -37,4 +37,8 @@ export class ResourceService {
     return this.http.delete(this.apiService.API_ENDPOINTS.ressources.delete(id));
   }
 
+  getUserByAuth0Id(auth0Id: string): Observable<any> {
+    return this.http.get(this.apiService.API_ENDPOINTS.authentication.getUserByAuth0Id(encodeURIComponent(auth0Id)));
+  }
+
 }

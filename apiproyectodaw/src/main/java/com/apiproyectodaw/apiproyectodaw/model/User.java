@@ -23,6 +23,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "auth0_id", nullable = false, unique = true, length = 100)
+    private String auth0Id;
+
     @Column(nullable = false, length = 100)
     private String nombre;
 
@@ -50,10 +53,12 @@ public class User {
 
     // Relación con Comentarios
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({ "usuario", "recurso" })
     private List<Comments> comentarios;
 
     // Relación con Valoraciones
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({ "usuario", "recurso" })
     private List<Ratings> valoraciones;
 
     @PostConstruct
