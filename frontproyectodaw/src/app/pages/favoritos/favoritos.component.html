@@ -1,69 +1,57 @@
-<div class="p-6">
-  <h2 class="text-xl font-semibold mb-4">Tus recursos favoritos</h2>
+<div class="bg-white p-6 w-full rounded-md shadow-md">
+  @if (isLoading) {
+    <div class="loadingData flex items-center justify-center">
+      <mat-spinner></mat-spinner>
+    </div>
+  }
 
-  <!-- ANTERIOR: máximo 5 con placeholders -->
-  <!--
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    <ng-container *ngFor="let favorito of favoritos; let i = index">
-      <mat-card *ngIf="favorito; else noFavorito" class="shadow-md" style="background-color: #f3f4f6; color: #1f2937;">
+  <div *ngIf="!isLoading" class="w-full">
+    <h1 class="text-3xl font-bold mb-4 text-black">Tus recursos favoritos</h1>
+
+    <!-- Divider -->
+    <div class="border-b border-gray-300 mb-4"></div>
+
+    <!-- Si hay favoritos, mostrar las tarjetas -->
+    <div *ngIf="favoritos.length > 0; else noFavoritos" class="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <mat-card *ngFor="let recurso of favoritos"
+        class="cursor-pointer hover:!shadow-lg transition-shadow duration-300 rounded-lg p-4 !bg-white"
+        appearance="outlined">
+        <div class="header-container flex items-center justify-between">
+          <mat-icon class="text-4xl !text-[#ad1d7d] mr-2">{{ recurso.icon }}</mat-icon>
+
+          <!-- Eliminar de favoritos -->
+          <button mat-icon-button (click)="toggleFavorite(recurso)">
+            <mat-icon [style.color]="recurso.isFavorite ? '#ad1d7d' : 'gray'">
+              {{ recurso.isFavorite ? 'favorite' : 'favorite_border' }}
+            </mat-icon>
+          </button>
+        </div>
+
+        <div class="border-b border-gray-300 mb-2 mt-2"></div>
+
         <mat-card-header>
-          <mat-icon mat-card-avatar>folder</mat-icon>
-          <mat-card-title>Favorito {{ i + 1 }}</mat-card-title>
+          <mat-card-title class="text-lg font-semibold">{{ recurso.titulo }}</mat-card-title>
+          <mat-card-subtitle class="text-sm text-gray-600">{{ recurso.tipo }}</mat-card-subtitle>
         </mat-card-header>
+
         <mat-card-content>
-          <p><strong>Título:</strong> {{ favorito.name }}</p>
-          <p><strong>Tipo:</strong> {{ favorito.symbol }}</p>
-          <p><strong>Peso:</strong> {{ favorito.weight }}</p>
+          <p class="text-gray-700">{{ recurso.descripcion }}</p>
+          <p class="text-sm text-gray-500 mt-2">Categoría: {{ recurso.categoria?.nombre }}</p>
+          <p class="text-sm text-gray-500">Licencia: {{ recurso.licencia?.nombre }}</p>
+          <p class="text-sm text-gray-500">Subido por: {{ recurso.usuario?.nombre }}</p>
+          <p class="text-sm text-gray-500">Fecha de subida: {{ recurso.fechaSubida | date:'short' }}</p>
         </mat-card-content>
+
+        <mat-card-actions class="justify-end">
+          <button mat-button color="primary" (click)="openResourcesEditDialog(recurso)">Editar</button>
+          <button mat-button color="warn" (click)="deleteResource(recurso.id)">Eliminar</button>
+        </mat-card-actions>
       </mat-card>
+    </div>
 
-      <ng-template #noFavorito>
-        <mat-card style="background-color: #f3f4f6; color: #1f2937;">
-          <mat-card-content class="flex flex-col items-center justify-center py-8">
-            <mat-icon class="text-3xl text-gray-700 mb-2">favorite_border</mat-icon>
-            <p>No tienes favoritos por el momento</p>
-          </mat-card-content>
-        </mat-card>
-      </ng-template>
-    </ng-container>
-  </div>
-  -->
-
-  <!-- NUEVO: mostrar todos los favoritos con paginación -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    <ng-container *ngFor="let favorito of favoritos | slice:(paginaActual - 1) * itemsPorPagina : paginaActual * itemsPorPagina">
-      <mat-card class="shadow-md" style="background-color: #f3f4f6; color: #1f2937;">
-        <mat-card-header>
-          <mat-icon mat-card-avatar>folder</mat-icon>
-          <mat-card-title>{{ favorito.name }}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p><strong>Título:</strong> {{ favorito.name }}</p>
-          <p><strong>Tipo:</strong> {{ favorito.symbol }}</p>
-          <p><strong>Peso:</strong> {{ favorito.weight }}</p>
-        </mat-card-content>
-      </mat-card>
-    </ng-container>
-  </div>
-
-  <!-- NUEVO: controles de paginación funcionales -->
-  <div class="mt-4 flex justify-center items-center gap-4">
-    <button
-      mat-stroked-button
-      color="primary"
-      (click)="paginaActual = paginaActual - 1"
-      [disabled]="paginaActual === 1">
-      Anterior
-    </button>
-
-    <span class="text-sm">Página {{ paginaActual }}</span>
-
-    <button
-      mat-stroked-button
-      color="primary"
-      (click)="paginaActual = paginaActual + 1"
-      [disabled]="paginaActual * itemsPorPagina >= favoritos.length">
-      Siguiente
-    </button>
+    <!-- Template alternativo si NO hay favoritos -->
+    <ng-template #noFavoritos>
+      <p class="text-gray-600 text-center mt-12 text-lg">No tienes recursos favoritos por el momento.</p>
+    </ng-template>
   </div>
 </div>
