@@ -25,6 +25,7 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .rol(request.getRol())
                 .avatar(request.getAvatar())
+                .auth0Id(request.getAuth0_id())
                 .build();
 
         // Check if the email already exists in the database

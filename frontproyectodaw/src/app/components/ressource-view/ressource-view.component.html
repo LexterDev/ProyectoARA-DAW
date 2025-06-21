@@ -1,0 +1,52 @@
+<div class="w-full p-10 rounded-lg !bg-white shadow-md mt-3">
+    <h2 class="text-3xl font-bold mb-4 text-black text-center">{{ ressource.titulo }}</h2>
+
+    <!-- Video container for Youtube video -->
+    <div class="video-container mb-6 text-center">
+        <iframe width="100%" height="720" [src]="safeUrl" title="YouTube video player" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="margin: 0 auto;"></iframe>
+    </div>
+    <!-- Información general del recurso -->
+    <div class="info-container display-flex items-center mt-3 bg-gray-300 p-4 rounded-lg">
+        <div>
+            <p><strong>Descripción:</strong> {{ ressource.descripcion }}</p>
+        </div>
+        <div>
+            <p><strong>Tipo:</strong> {{ ressource.tipo }}</p>
+        </div>
+        <div>
+            <p><strong>Categoría:</strong> {{ ressource.categoria?.nombre }}</p>
+        </div>
+        <div>
+            <p><strong>Licencia:</strong> {{ ressource.licencia?.nombre }}</p>
+        </div>
+        <div>
+            <p><strong>Fecha de creación:</strong> {{ ressource.fechaSubida | date }}</p>
+        </div>
+    </div>
+    <!-- Ratings Section -->
+    <app-ratings-resource [resource]="ressource"></app-ratings-resource>
+    <!-- Divider -->
+    <div class="border-b border-gray-300 my-8"></div>
+    <!-- Comments Section -->
+    <div class="mt-6 flex justify-end items-center">
+        <button mat-raised-button
+            class="!bg-[#ad1d7d] flex py-2 !text-lg hover:!bg-[#505050] !text-white !rounded-md justify-center cursor-pointer hover:bg-[#303030]"
+            (click)="addCommentVisible = !addCommentVisible">
+            <mat-icon class="mr-2">comment</mat-icon>
+            Agregar comentario
+        </button>
+    </div>
+    <app-add-comment [resource]="ressource" (commentAdded)="onCommentAdded($event)" *ngIf="addCommentVisible">
+    </app-add-comment>
+
+    <!-- Divider -->
+    <div class="border-b border-gray-300 my-8"></div>
+    <div class="comments-section">
+        <h3 class="text-2xl font-semibold mb-4">Comentarios</h3>
+    </div>
+
+    <app-comments [resource]="ressource" #commentsComponent>
+    </app-comments>
+</div>

@@ -1,0 +1,21 @@
+<div class="w-full p-8 rounded-md !bg-white shadow-md mt-3">
+    <mat-card class="w-full p-4 rounded-md !bg-white shadow-md">
+        <mat-card-header>
+            <mat-card-title class="text-2xl font-bold text-center">Agrega un comentario</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content class="p-4">
+            <textarea name="" id="" class="w-full h-32 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ad1d7d] mt-3"
+                placeholder="Escribe tu comentario aquí..." [(ngModel)]="commentText">
+            </textarea>
+        </mat-card-content>
+        <mat-card-actions class="flex justify-end">
+            <button mat-raised-button color="primary" class="!bg-[#ad1d7d] hover:!bg-[#505050] !text-white !rounded-md"
+                (click)="submitComment()">
+                Enviar comentario
+            </button>
+        </mat-card-actions>
+
+    </mat-card>
+
+</div>

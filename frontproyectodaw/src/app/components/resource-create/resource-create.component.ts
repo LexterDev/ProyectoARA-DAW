@@ -9,6 +9,7 @@ import { LicensesService } from '../../services/licenses.service';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
+import { Auth0Service } from '../../services/auth0.service';
 
 
 @Component({
@@ -30,6 +31,8 @@ export class ResourceCreateComponent implements OnInit {
   licencias: any[] = [];
   isVideo: boolean = false;
   isInputDisabled: boolean = false;
+  auth0UserId: string = '';
+  internalUserId: string = '';
 
   @Output() isResourceSaved = new EventEmitter<any>();
 
@@ -38,7 +41,8 @@ export class ResourceCreateComponent implements OnInit {
     private resourceService: ResourceService,
     private categoryService: CategoriesService,
     private licenseService: LicensesService,
-    private dialogRef: MatDialogRef<ResourceCreateComponent>
+    private dialogRef: MatDialogRef<ResourceCreateComponent>,
+    private authService: Auth0Service
   ) { }
 
   ngOnInit(): void {
@@ -53,12 +57,35 @@ export class ResourceCreateComponent implements OnInit {
 
     this.loadCategories();
     this.loadLicencias();
+    this.getUserAuth0Id();
   }
 
   loadCategories(): void {
     this.categoryService.getCategories().subscribe({
       next: (res) => this.categories = res,
       error: () => Swal.fire('Error', 'No se pudieron cargar las categorías', 'error')
+    });
+  }
+
+  getUserAuth0Id(): any {
+    this.authService.user$.subscribe(user => {
+      if (user) {
+        this.auth0UserId = user?.sub;
+        this.getInternalId(); 
+      }
+    });    
+  }
+
+  getInternalId(): any {
+    const userId = this.auth0UserId;
+    console.log('User ID:', userId);
+    this.resourceService.getUserByAuth0Id(userId).subscribe({
+      next: (user) => {
+        this.internalUserId = user.id; // Almacena el ID del usuario interno
+      },
+      error: () => {
+        console.error('Error al obtener el ID del usuario interno');
+      }
     });
   }
 
@@ -125,7 +152,7 @@ export class ResourceCreateComponent implements OnInit {
         tipo: this.resourceForm.get('tipo')?.value,
         idCategoria: this.resourceForm.get('categoriaId')?.value,
         idLicencia: this.resourceForm.get('licenciaId')?.value,
-        idUsuario: '3', // <-- Reemplazaremos esto  después por el ID dinámico del usuario logueado
+        idUsuario: this.internalUserId, // <-- Reemplazaremos esto  después por el ID dinámico del usuario logueado
         urlExterna: urlExterna
       }
 
@@ -150,7 +177,7 @@ export class ResourceCreateComponent implements OnInit {
       formData.append('tipo', this.resourceForm.get('tipo')?.value);
       formData.append('idCategoria', this.resourceForm.get('categoriaId')?.value);
       formData.append('idLicencia', this.resourceForm.get('licenciaId')?.value);
-      formData.append('idUsuario', '3'); // <-- Reemplaza esto por el ID dinámico del usuario logueado
+      formData.append('idUsuario', this.internalUserId); // <-- Reemplaza esto por el ID dinámico del usuario logueado
       if (this.selectedFile) {
         formData.append('file', this.selectedFile);
       }

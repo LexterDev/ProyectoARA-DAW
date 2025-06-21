@@ -110,7 +110,7 @@ public class ResourceController {
         try {
             //Obtener entidades relacionadas
             User usuario = userService.getUserById(resourceDTO.getIdUsuario())
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado" + resourceDTO.getIdUsuario()));
 
 
             Categories categoria = categoriesService.getCategoryById(resourceDTO.getIdCategoria())

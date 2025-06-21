@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.apiproyectodaw.apiproyectodaw.model.User;
 import com.apiproyectodaw.apiproyectodaw.repository.UserRepository;
+import com.apiproyectodaw.apiproyectodaw.service.UserService;
 
 @RestController
 @RequestMapping("/api/users")
@@ -18,12 +19,21 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         return userRepository.findById(id)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
+    }
+
+    // Endpoint para Auth0
+    @GetMapping("/auth0/{auth0Id}")
+    public ResponseEntity<User> getUserByAuth0Id(@PathVariable String auth0Id) {
+        User user = userService.findByAuth0Id(auth0Id);
+        return ResponseEntity.ok(user);
     }
 }
 

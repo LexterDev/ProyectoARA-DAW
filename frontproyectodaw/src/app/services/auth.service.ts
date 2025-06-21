@@ -20,14 +20,15 @@ export class AuthService {
             }));
     }
 
-    register(name: string, email: string, password: string, rol: string, avatar:string): Observable<any> {
+    register(name: string, email: string, password: string, rol: string, avatar:string, auth0_id:string): Observable<any> {
         return this.http.post(this.apiService.API_ENDPOINTS.authentication.register,
             {
                 "nombre": name,
                 "email": email,
                 "password": password,
                 "rol": rol,
-                "avatar": avatar
+                "avatar": avatar,
+                "auth0_id": auth0_id
             });
     }
 
