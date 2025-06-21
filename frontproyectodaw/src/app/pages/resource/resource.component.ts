@@ -9,13 +9,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog } from '@angular/material/dialog';
 import { ResourceCreateComponent } from '../../components/resource-create/resource-create.component';
 import { Router } from '@angular/router';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 import { ResourceEditComponent } from '../../components/resource-edit/resource-edit.component';
 import { MatCardModule } from '@angular/material/card';
+import { Auth0Service } from '../../services/auth0.service'; // ✅ CORREGIDO
 import { RessourceViewComponent } from '../../components/ressource-view/ressource-view.component';
 
 @Component({
   selector: 'app-resource',
+  standalone: true,
   imports: [
     DataTablesModule,
     MatIcon,
@@ -28,9 +30,10 @@ import { RessourceViewComponent } from '../../components/ressource-view/ressourc
   styleUrl: './resource.component.scss'
 })
 export class ResourceComponent implements OnInit {
-
   listResources: any[] = [];
   isLoading: boolean = false;
+  currentUserId: string = ''; // ✅ NUEVO
+
   icons: any[] = [
     { type: 'PDF', icon: 'picture_as_pdf', image: 'document-default.jpg' },
     { type: 'VIDEO', icon: 'video_library', image: 'video_default.jpg' },
@@ -43,6 +46,8 @@ export class ResourceComponent implements OnInit {
   constructor(
     private resourceService: ResourceService,
     private dialog: MatDialog,
+    private router: Router,
+    private authService: Auth0Service // ✅ NUEVO  
     private router: Router
 
   ) { }
@@ -70,34 +75,129 @@ export class ResourceComponent implements OnInit {
       },
     };
 
-    ngOnInit() {
-      this.isLoading = true;
+  ngOnInit(): void {
+    this.isLoading = true;
+
+    this.authService.user$.subscribe((user: any) => { // ✅ CORREGIDO
+      this.currentUserId = user?.sub || '';
       this.getAllResources();
+    });
+  }
 
-      this.getAllFavorites();
-    }
+  getAllResources(): void {
+    this.resourceService.getAllResources().subscribe({
+      next: (res) => {
+        const guardados = localStorage.getItem('favoritos');
+        const favoritos = guardados ? JSON.parse(guardados) : [];
 
-    //get all resources
-    getAllResources() {
-      this.resourceService.getAllResources().subscribe({
-        next: (res) => {
-          // Agegar prpiedad isFavorite a cada recurso
-          this.listResources = res.map((resource: any) => ({
+        this.listResources = res.map((resource: any) => {
+          const fav = favoritos.find((f: any) => f.id === resource.id && f.userId === this.currentUserId);
+          return {
             ...resource,
-            isFavorite: false,
-            // Asignar el icono basado en el tipo de recurso puede ser PDF, Video, Imagen u otro.
-            icon: this.icons.find(icon => icon.type === resource.tipo)?.icon || 'insert_drive_file',
-            image: this.icons.find(icon => icon.type === resource.tipo)?.image || 'other-default.jpg'
-          }));
-          // this.listResources = res;
+            isFavorite: fav ? fav.favorito : false,
+            icon: this.icons.find(icon => icon.type === resource.tipo)?.icon || 'insert_drive_file'
+          };
+        });
+
         this.isLoading = false;
-          console.log(this.listResources);
-        },
-        error: (err) => {
-          console.log(err);
-        }
-      });
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
+
+  openResourcesCreateDialog(): void {
+    const dialogRef = this.dialog.open(ResourceCreateComponent, {
+      width: '500px',
+      data: {}
+    });
+
+    dialogRef.componentInstance.isResourceSaved.subscribe((isSaved: any) => {
+      if (isSaved) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Recurso creado',
+          text: 'El recurso fue creado correctamente',
+          showConfirmButton: false,
+          timer: 2500
+        });
+
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this.router.navigate(['/resources']);
+        });
+      }
+    });
+  }
+
+  openResourcesEditDialog(resource: any): void {
+    const dialogRef = this.dialog.open(ResourceEditComponent, {
+      width: '500px',
+      data: {
+        resourceObject: resource,
+        isVideo: resource.tipo === 'video'
+      }
+    });
+
+    dialogRef.componentInstance.isResourceSaved.subscribe((isSaved: any) => {
+      if (isSaved) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Recurso editado',
+          text: 'El recurso fue editado correctamente',
+          showConfirmButton: false,
+          timer: 2500
+        });
+
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this.router.navigate(['/resources']);
+        });
+      }
+    });
+  }
+
+  deleteResource(id: number): void {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "¡No podrás revertir esto!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminarlo!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.resourceService.deleteResource(id).subscribe({
+          next: (response) => {
+            console.log('Recurso eliminado con éxito', response);
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+              this.router.navigate(['/resources']);
+            });
+          },
+          error: (error) => {
+            console.error('Error al eliminar el recurso', error);
+          }
+        });
+      }
+    });
+  }
+
+  toggleFavorite(resource: any): void {
+    resource.isFavorite = !resource.isFavorite;
+
+    const guardados = localStorage.getItem('favoritos');
+    let favoritos = guardados ? JSON.parse(guardados) : [];
+
+    const index = favoritos.findIndex((r: any) => r.id === resource.id && r.userId === this.currentUserId);
+
+    if (index > -1) {
+      favoritos[index].favorito = resource.isFavorite;
+    } else {
+      favoritos.push({ ...resource, favorito: resource.isFavorite, userId: this.currentUserId }); // ✅ Asociar con el usuario
     }
+
+    localStorage.setItem('favoritos', JSON.stringify(favoritos));
+  }
 
 
     openResourcesCreateDialog() {
@@ -215,4 +315,7 @@ export class ResourceComponent implements OnInit {
       });
     }
 
+  verFavoritos(): void {
+    this.router.navigate(['/resources/favoritos']);
+  }
 }

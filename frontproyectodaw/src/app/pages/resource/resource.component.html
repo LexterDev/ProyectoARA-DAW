@@ -7,6 +7,10 @@
 
     <div *ngIf="!isLoading" class="w-full">
         <h1 class="text-3xl font-bold mb-4 text-black">Administración de Recursos</h1>
+
+        <!-- nuevo: enlace debajo del título, alineado a la izquierda -->
+
+        
         <!-- Divider -->
         <div class="border-b border-gray-300 mb-4"></div>
 
@@ -66,16 +70,15 @@
             <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
                 <mat-card *ngFor="let recurso of listResources"
                     class="cursor-pointer hover:!shadow-lg transition-shadow duration-300 rounded-lg p-4 !bg-white"
-                     appearance="outlined" (click)="openRessourceViewDialog(recurso, $event)">
+                    appearance="outlined">
                     <div class="header-container flex items-center justify-between">
                         <mat-icon class="text-4xl !text-[#ad1d7d] mr-2">{{ recurso.icon }}</mat-icon>
 
                         <!-- Agregar a favoritos -->
-                        <button mat-icon-button (click)="toggleFavorite(recurso, $event)">
-                            <mat-icon ngClass="{
-                                '!text-red-500': recurso.isFavorite,
-                                '!text-gray-400': !recurso.isFavorite
-                            }">{{ recurso.isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+                        <button mat-icon-button (click)="toggleFavorite(recurso)">
+                            <mat-icon [style.color]="recurso.isFavorite ? '#ad1d7d' : 'gray'">
+                                {{ recurso.isFavorite ? 'favorite' : 'favorite_border' }}
+                            </mat-icon>
                         </button>
 
                     </div>
