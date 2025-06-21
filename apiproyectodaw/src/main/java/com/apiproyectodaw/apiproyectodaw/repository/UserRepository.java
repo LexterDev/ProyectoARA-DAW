@@ -11,4 +11,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmail(String email);
     @SuppressWarnings("null")
     Optional<User> findById(Long id);
+    Optional<User> findByAuth0Id(String auth0Id);
+    boolean existsByAuth0Id(String auth0Id);
 }

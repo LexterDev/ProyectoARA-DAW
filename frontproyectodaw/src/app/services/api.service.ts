@@ -17,6 +17,7 @@ export class ApiService {
       //AGREGAR RUTAS DE VER Y EDITAR INFORMACION
       edit: `${this.apiUrl}/auth/edit`,
       get: `${this.apiUrl}/auth/get`,
+      getUserByAuth0Id: (auth0Id: string) => `${this.apiUrl}/users/auth0/${auth0Id}`,
     },
     ressources: {
       getAll: `${this.apiUrl}/resources`,
@@ -58,5 +59,22 @@ export class ApiService {
     update: (id: number) => `${this.apiUrl}/users/${id}`,
     delete: (id: number) => `${this.apiUrl}/users/${id}`
   },
+  ratings: {
+    getAll: `${this.apiUrl}/ratings`,
+    getById: (id: number) => `${this.apiUrl}/ratings/${id}`,
+    create: `${this.apiUrl}/ratings`,
+    update: (id: number) => `${this.apiUrl}/ratings/${id}`,
+    delete: (id: number) => `${this.apiUrl}/ratings/${id}`,
+    getByResourceId: (resourceId: number) => `${this.apiUrl}/ratings/resource/${resourceId}`,
+    getRatingsByResourceId: (resourceId: number) => `${this.apiUrl}/ratings/resource/${resourceId}`,
+  },
+  comments: {
+    getAll: `${this.apiUrl}/comments`,
+    getById: (id: number) => `${this.apiUrl}/comments/${id}`,
+    create: `${this.apiUrl}/comments`,
+    update: (id: number) => `${this.apiUrl}/comments/${id}`,
+    delete: (id: number) => `${this.apiUrl}/comments/${id}`,
+    getByResourceId: (resourceId: number) => `${this.apiUrl}/comments/resource/${resourceId}`,
+  }
 }
 }

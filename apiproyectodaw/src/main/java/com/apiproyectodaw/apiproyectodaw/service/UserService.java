@@ -25,6 +25,19 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    // Obtener usuario por Auth0 ID
+   // Buscar usuario por Auth0 ID
+    public User findByAuth0Id(String auth0Id) {
+        return userRepository.findByAuth0Id(auth0Id)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado con Auth0 ID: " + auth0Id));
+    }
+
+    // Obtener ID interno desde Auth0 ID
+    public Long getInternalIdFromAuth0(String auth0Id) {
+        User user = findByAuth0Id(auth0Id);
+        return user.getId();
+    }
+
     // Obtener usuario por email
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
@@ -66,5 +79,28 @@ public class UserService {
     // Verificar si existe un email
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    // Crear o actualizar usuario desde Auth0
+    public User createOrUpdateFromAuth0(String auth0Id, String nombre, String email, String rol) {
+        Optional<User> existingUser = userRepository.findByAuth0Id(auth0Id);
+        
+        if (existingUser.isPresent()) {
+            // Actualizar usuario existente
+            User user = existingUser.get();
+            user.setNombre(nombre);
+            user.setEmail(email);
+            user.setRol(rol);
+            return userRepository.save(user);
+        } else {
+            // Crear nuevo usuario
+            User newUser = User.builder()
+                .auth0Id(auth0Id)
+                .nombre(nombre)
+                .email(email)
+                .rol(rol)
+                .build();
+            return userRepository.save(newUser);
+        }
     }
 }

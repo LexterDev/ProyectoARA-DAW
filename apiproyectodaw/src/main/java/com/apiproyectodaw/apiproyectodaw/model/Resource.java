@@ -60,10 +60,12 @@ public class Resource {
 
     // Relación con Comentarios
     @OneToMany(mappedBy = "recurso", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({ "usuario", "recurso" })
     private List<Comments> comentarios;
 
     // Relación con Valoraciones
     @OneToMany(mappedBy = "recurso", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({ "usuario", "recurso" })
     private List<Ratings> valoraciones;
 
     // Relación con Categoría

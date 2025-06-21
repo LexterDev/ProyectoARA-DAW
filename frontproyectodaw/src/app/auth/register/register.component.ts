@@ -133,7 +133,7 @@ export class RegisterComponent implements OnInit {
       const avatar = 'AvatarMan1.png';
 
       this.loading = true; // Set loading to true when the request starts
-      this.authService.register(fullName, email, password, rol, avatar).subscribe({
+      this.authService.register(fullName, email, password, rol, avatar, '').subscribe({
         next: (response) => {
           console.log(response);
           if (response.error) {
