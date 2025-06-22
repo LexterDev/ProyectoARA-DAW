@@ -30,6 +30,7 @@ export class ApiService {
       //Busqueda de recursos por tipo
       search: `${this.apiUrl}/resources/search`,
       createExternal: `${this.apiUrl}/resources/external`,
+      getFileRL: (id: number) => `${this.apiUrl}/resources/url/${id}`,
     },
     tags: {
       getAll: `${this.apiUrl}/tags`,
@@ -75,6 +76,7 @@ export class ApiService {
     update: (id: number) => `${this.apiUrl}/comments/${id}`,
     delete: (id: number) => `${this.apiUrl}/comments/${id}`,
     getByResourceId: (resourceId: number) => `${this.apiUrl}/comments/resource/${resourceId}`,
+    
   }
 }
 }

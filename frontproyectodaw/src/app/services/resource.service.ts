@@ -41,4 +41,8 @@ export class ResourceService {
     return this.http.get(this.apiService.API_ENDPOINTS.authentication.getUserByAuth0Id(encodeURIComponent(auth0Id)));
   }
 
+  getFileRL(resource: any): string {
+    return this.http.get(this.apiService.API_ENDPOINTS.ressources.getFileRL(resource.id), { responseType: 'text' }).toString();
+  }
+
 }

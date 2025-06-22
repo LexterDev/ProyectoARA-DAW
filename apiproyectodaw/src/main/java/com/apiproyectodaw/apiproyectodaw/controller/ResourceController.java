@@ -108,10 +108,9 @@ public class ResourceController {
     @PostMapping("/external")
     public ResponseEntity<?> createExternalResource(@RequestBody ResourceDTO resourceDTO) {
         try {
-            //Obtener entidades relacionadas
+            // Obtener entidades relacionadas
             User usuario = userService.getUserById(resourceDTO.getIdUsuario())
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrado" + resourceDTO.getIdUsuario()));
-
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado" + resourceDTO.getIdUsuario()));
 
             Categories categoria = categoriesService.getCategoryById(resourceDTO.getIdCategoria())
                     .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
@@ -170,6 +169,40 @@ public class ResourceController {
         }
     }
 
+    // Visualizar archivo en iframe
+    // Visualizar archivo en iframe (NUEVO MÉTODO)
+    @GetMapping("/files/view/{fileName:.+}")
+    public ResponseEntity<org.springframework.core.io.Resource> viewFile(@PathVariable String fileName) {
+        try {
+            org.springframework.core.io.Resource file = resourceService.loadFileAsResource(fileName);
+
+            // Detectar tipo de contenido
+            String contentType = "application/octet-stream";
+            String filename = file.getFilename();
+
+            if (filename != null) {
+                if (filename.toLowerCase().endsWith(".pdf")) {
+                    contentType = "application/pdf";
+                } else if (filename.toLowerCase().endsWith(".jpg") || filename.toLowerCase().endsWith(".jpeg")) {
+                    contentType = "image/jpeg";
+                } else if (filename.toLowerCase().endsWith(".png")) {
+                    contentType = "image/png";
+                } else if (filename.toLowerCase().endsWith(".mp4")) {
+                    contentType = "video/mp4";
+                }
+            }
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_TYPE, contentType)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline")
+                    .header("X-Frame-Options", "SAMEORIGIN") // ¡PERMITIR IFRAMES DEL MISMO ORIGEN!
+                    .header("Content-Security-Policy", "frame-ancestors 'self' http://localhost:4200")
+                    .body(file);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     // Obtener recursos por usuario
     @GetMapping("/user/{userId}")
     public List<Resource> getResourcesByUser(@PathVariable Long userId) {
@@ -186,5 +219,20 @@ public class ResourceController {
     @GetMapping("/type/{tipo}")
     public List<Resource> getResourcesByType(@PathVariable String tipo) {
         return resourceService.getResourcesByType(tipo);
+    }
+
+    // Obtener URL recurso si es PDF para abrir en angular en iframe
+    @GetMapping("/url/{id}")
+    public ResponseEntity<String> getResourceUrl(@PathVariable Long id) {
+        Optional<Resource> resource = resourceService.getResourceById(id);
+        if (resource.isPresent() && "pdf".equalsIgnoreCase(resource.get().getTipo())) {
+            String url = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/api/resources/files/")
+                    .path(resource.get().getUrlArchivo())
+                    .toUriString();
+            return ResponseEntity.ok(url);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

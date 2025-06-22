@@ -1,4 +1,4 @@
-import { Component, Inject, Input, ViewChild } from '@angular/core';
+import { Component, Inject, Input, ViewChild, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -24,13 +24,13 @@ import { CommentsComponent } from '../comments/comments.component';
   templateUrl: './ressource-view.component.html',
   styleUrl: './ressource-view.component.scss'
 })
-export class RessourceViewComponent {
+export class RessourceViewComponent implements OnInit {
 
   @ViewChild('commentsComponent') commentsComponent!: CommentsComponent;
 
   ressource: any;
   safeUrl: any;
-  addCommentVisible: boolean = false;  
+  addCommentVisible: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<RessourceViewComponent>,
@@ -38,11 +38,24 @@ export class RessourceViewComponent {
     private sanitizer: DomSanitizer
   ) {
     this.ressource = data.resourceObject;
-    this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.ressource.urlArchivo);
+
+    console.log('Recurso recibido en el diálogo:', this.ressource);
+  }
+
+  ngOnInit(): void {
+    this.GetsafeUrl();
   }
 
   closeDialog(): void {
     this.dialogRef.close();
+  }
+
+  GetsafeUrl() : void {
+    if (this.ressource.tipo === 'Video') {
+      this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.ressource.urlArchivo);
+    } else {
+      this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl('http://localhost:8080/api/resources/files/view/' + this.ressource.urlArchivo);
+    }
   }
 
   // Método que se ejecuta cuando se agrega un comentario

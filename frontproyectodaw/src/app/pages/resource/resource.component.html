@@ -70,12 +70,12 @@
             <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
                 <mat-card *ngFor="let recurso of listResources"
                     class="cursor-pointer hover:!shadow-lg transition-shadow duration-300 rounded-lg p-4 !bg-white"
-                    appearance="outlined">
+                    appearance="outlined" (click)="openRessourceViewDialog(recurso, $event)">
                     <div class="header-container flex items-center justify-between">
                         <mat-icon class="text-4xl !text-[#ad1d7d] mr-2">{{ recurso.icon }}</mat-icon>
 
                         <!-- Agregar a favoritos -->
-                        <button mat-icon-button (click)="toggleFavorite(recurso)">
+                        <button mat-icon-button (click)="toggleFavorite(recurso, $event)">
                             <mat-icon [style.color]="recurso.isFavorite ? '#ad1d7d' : 'gray'">
                                 {{ recurso.isFavorite ? 'favorite' : 'favorite_border' }}
                             </mat-icon>
@@ -87,7 +87,7 @@
                     <!-- <mat-card-header>
 
                         <mat-card-title class="text-3xl font-semibold">{{ recurso.titulo }}</mat-card-title>
-                        <!-- <mat-card-subtitle class="text-sm text-gray-600">{{ recurso.tipo }}</mat-card-subtitle>
+                        <mat-card-subtitle class="text-sm text-gray-600">{{ recurso.tipo }}</mat-card-subtitle>
                     </mat-card-header> -->
                     <img mat-card-image [src]="recurso.image" alt="Photo of a Shiba Inu">
                     <mat-card-content>

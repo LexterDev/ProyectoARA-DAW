@@ -47,8 +47,7 @@ export class ResourceComponent implements OnInit {
     private resourceService: ResourceService,
     private dialog: MatDialog,
     private router: Router,
-    private authService: Auth0Service // ✅ NUEVO  
-    private router: Router
+    private authService: Auth0Service // ✅ NUEVO 
 
   ) { }
 
@@ -95,7 +94,8 @@ export class ResourceComponent implements OnInit {
           return {
             ...resource,
             isFavorite: fav ? fav.favorito : false,
-            icon: this.icons.find(icon => icon.type === resource.tipo)?.icon || 'insert_drive_file'
+            icon: this.icons.find(icon => icon.type === resource.tipo)?.icon || 'insert_drive_file',
+            image: this.icons.find(icon => icon.type === resource.tipo)?.image || 'other-default.jpg'
           };
         });
 
@@ -107,82 +107,83 @@ export class ResourceComponent implements OnInit {
     });
   }
 
-  openResourcesCreateDialog(): void {
-    const dialogRef = this.dialog.open(ResourceCreateComponent, {
-      width: '500px',
-      data: {}
-    });
+  // openResourcesCreateDialog(): void {
+  //   const dialogRef = this.dialog.open(ResourceCreateComponent, {
+  //     width: '500px',
+  //     data: {}
+  //   });
 
-    dialogRef.componentInstance.isResourceSaved.subscribe((isSaved: any) => {
-      if (isSaved) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Recurso creado',
-          text: 'El recurso fue creado correctamente',
-          showConfirmButton: false,
-          timer: 2500
-        });
+  //   dialogRef.componentInstance.isResourceSaved.subscribe((isSaved: any) => {
+  //     if (isSaved) {
+  //       Swal.fire({
+  //         icon: 'success',
+  //         title: 'Recurso creado',
+  //         text: 'El recurso fue creado correctamente',
+  //         showConfirmButton: false,
+  //         timer: 2500
+  //       });
 
-        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-          this.router.navigate(['/resources']);
-        });
-      }
-    });
-  }
+  //       this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+  //         this.router.navigate(['/resources']);
+  //       });
+  //     }
+  //   });
+  // }
 
-  openResourcesEditDialog(resource: any): void {
-    const dialogRef = this.dialog.open(ResourceEditComponent, {
-      width: '500px',
-      data: {
-        resourceObject: resource,
-        isVideo: resource.tipo === 'video'
-      }
-    });
+  // openResourcesEditDialog(resource: any): void {
+  //   const dialogRef = this.dialog.open(ResourceEditComponent, {
+  //     width: '500px',
+  //     data: {
+  //       resourceObject: resource,
+  //       isVideo: resource.tipo === 'video'
+  //     }
+  //   });
 
-    dialogRef.componentInstance.isResourceSaved.subscribe((isSaved: any) => {
-      if (isSaved) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Recurso editado',
-          text: 'El recurso fue editado correctamente',
-          showConfirmButton: false,
-          timer: 2500
-        });
+  //   dialogRef.componentInstance.isResourceSaved.subscribe((isSaved: any) => {
+  //     if (isSaved) {
+  //       Swal.fire({
+  //         icon: 'success',
+  //         title: 'Recurso editado',
+  //         text: 'El recurso fue editado correctamente',
+  //         showConfirmButton: false,
+  //         timer: 2500
+  //       });
 
-        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-          this.router.navigate(['/resources']);
-        });
-      }
-    });
-  }
+  //       this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+  //         this.router.navigate(['/resources']);
+  //       });
+  //     }
+  //   });
+  // }
 
-  deleteResource(id: number): void {
-    Swal.fire({
-      title: '¿Estás seguro?',
-      text: "¡No podrás revertir esto!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, eliminarlo!'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.resourceService.deleteResource(id).subscribe({
-          next: (response) => {
-            console.log('Recurso eliminado con éxito', response);
-            this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-              this.router.navigate(['/resources']);
-            });
-          },
-          error: (error) => {
-            console.error('Error al eliminar el recurso', error);
-          }
-        });
-      }
-    });
-  }
+  // deleteResource(id: number): void {
+  //   Swal.fire({
+  //     title: '¿Estás seguro?',
+  //     text: "¡No podrás revertir esto!",
+  //     icon: 'warning',
+  //     showCancelButton: true,
+  //     confirmButtonColor: '#3085d6',
+  //     cancelButtonColor: '#d33',
+  //     confirmButtonText: 'Sí, eliminarlo!'
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       this.resourceService.deleteResource(id).subscribe({
+  //         next: (response) => {
+  //           console.log('Recurso eliminado con éxito', response);
+  //           this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+  //             this.router.navigate(['/resources']);
+  //           });
+  //         },
+  //         error: (error) => {
+  //           console.error('Error al eliminar el recurso', error);
+  //         }
+  //       });
+  //     }
+  //   });
+  // }
 
-  toggleFavorite(resource: any): void {
+  toggleFavorite(resource: any, event: Event): void {
+    event.stopPropagation();
     resource.isFavorite = !resource.isFavorite;
 
     const guardados = localStorage.getItem('favoritos');
@@ -282,20 +283,20 @@ export class ResourceComponent implements OnInit {
     openResourceDetailsDialog(resource: any) {
     }
 
-    toggleFavorite(resource: any, event: Event) {
-    event.stopPropagation();
-    const favoritesArray = JSON.parse(localStorage.getItem('favorites') || '[]');
+  //   toggleFavorite(resource: any, event: Event) {
+  //   event.stopPropagation();
+  //   const favoritesArray = JSON.parse(localStorage.getItem('favorites') || '[]');
 
-     favoritesArray.push(resource);
+  //    favoritesArray.push(resource);
 
-     localStorage.setItem('favorites', JSON.stringify(favoritesArray));
+  //    localStorage.setItem('favorites', JSON.stringify(favoritesArray));
 
-    //  Set isFavorite to true for the resource in the listResources
-    const resourceIndex = this.listResources.findIndex((res) => res.id === resource.id);
-    if (resourceIndex !== -1) {
-      this.listResources[resourceIndex].isFavorite = true;
-    }
-  }
+  //   //  Set isFavorite to true for the resource in the listResources
+  //   const resourceIndex = this.listResources.findIndex((res) => res.id === resource.id);
+  //   if (resourceIndex !== -1) {
+  //     this.listResources[resourceIndex].isFavorite = true;
+  //   }
+  // }
 
     getAllFavorites() {
       const favoritesArray = JSON.parse(localStorage.getItem('favorites') || '[]');

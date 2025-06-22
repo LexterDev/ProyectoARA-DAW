@@ -16,13 +16,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Añade esta línea
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // Permite todas las rutas sin autenticación
+                        .anyRequest().permitAll()
                 )
-                .csrf(csrf -> csrf.disable()) // Deshabilita la protección CSRF
-                .formLogin(login -> login.disable()) // Deshabilita el formulario de login
-                .httpBasic(basic -> basic.disable()); // Deshabilita la autenticación básica
+                .csrf(csrf -> csrf.disable())
+                .formLogin(login -> login.disable())
+                .httpBasic(basic -> basic.disable())
+                // ¡AGREGAR ESTA CONFIGURACIÓN DE HEADERS!
+                .headers(headers -> headers
+                        .frameOptions().deny() // Mantener deny por defecto para seguridad
+                );
         return http.build();
     }
     
@@ -31,7 +35,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
     
-    // Añade esta configuración de CORS
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
